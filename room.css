@@ -1,0 +1,118 @@
+/* room.css — Screen 4 (Methods & Systems Console) HTML overlay.
+   The room is a Three.js scene in #room3d-host; this styles the callout
+   cards (icon + title + description, like the reference render), connector
+   wires, header block and the glassy blue badge. */
+
+.s4 {
+  position: fixed; inset: 0; z-index: 4;
+  opacity: 0; visibility: hidden;
+  pointer-events: none;
+  font-family: var(--name-font);
+  overflow: hidden;
+}
+body.s4-live .s4 { pointer-events: auto; }
+
+.room { position: absolute; inset: 0; }
+#room3d-host { position: absolute; inset: 0; }
+
+/* ── callout wires ────────────────────────────────────────────────────────── */
+#s4-wires { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+#s4-wires path {
+  fill: none;
+  stroke: rgba(47, 95, 168, 0.32);
+  stroke-width: 1.05;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+#s4-wires circle.aend { fill: var(--accent); filter: drop-shadow(0 2px 3px rgba(47, 95, 168, 0.18)); }
+#s4-wires circle.cend { fill: #fff; stroke: rgba(47, 95, 168, 0.55); stroke-width: 1; }
+
+/* ── callout cards (reference style: icon + text, soft white, round) ──────── */
+.callout {
+  position: absolute; z-index: 5; width: 18vw; min-width: 224px;
+  display: flex; align-items: flex-start; gap: 11px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,251,253,0.94));
+  border: 1px solid rgba(28, 36, 52, 0.065);
+  border-radius: 14px; padding: 13px 15px 14px;
+  box-shadow:
+    0 22px 46px -24px rgba(20, 28, 44, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+  opacity: 0;
+}
+.co-icon {
+  flex: 0 0 auto; width: 30px; height: 30px; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, rgba(47, 95, 168, 0.10), rgba(47, 95, 168, 0.055));
+  border-radius: 8px; color: var(--accent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.72), 0 4px 9px -7px rgba(47,95,168,0.4);
+}
+.co-icon svg { width: 16px; height: 16px; }
+.co-glyph { font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: 0; }
+.co-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.callout .t { font-family: var(--name-font); font-size: 14.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; line-height: 1.25; }
+.callout .d { font-family: var(--name-font); font-size: 12px; line-height: 1.5; color: var(--ink-soft); margin-top: 0; text-wrap: pretty; }
+
+.callout.co-l { left: 2.7vw; }
+.callout.co-r { right: 2.7vw; }
+#co-econ { top: 23vh; }
+#co-pipe { top: 41vh; }
+#co-data { top: 60vh; }
+#co-py { top: 12vh; }
+#co-stata { top: 31vh; }
+#co-ai { top: 49vh; }
+#co-ros { top: 65vh; }
+
+/* ── header / labels ──────────────────────────────────────────────────────── */
+.s4-head { position: absolute; z-index: 6; top: 26px; left: 30px; opacity: 0; }
+.s4-head .s2-kicker { display: block; color: var(--accent); }
+.s4-head .s2-title { margin-top: 7px; white-space: nowrap; font-size: 27px; }
+.s4-head .s4-sub { font-family: var(--name-font); font-size: 14px; color: var(--ink-soft); margin-top: 7px; white-space: nowrap; }
+
+.s4-corner { position: absolute; z-index: 6; top: 28px; right: 30px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); opacity: 0; }
+.s4-fig { position: absolute; z-index: 6; bottom: 22px; left: 30px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(121, 130, 143, 0.7); opacity: 0; }
+
+/* glassy blue badge, bottom-right like the reference */
+.s4-badge {
+  position: absolute; z-index: 6; left: 4.4vw; bottom: 5vh;
+  display: flex; flex-direction: row; align-items: center; gap: 5px;
+  padding: 10px 17px 11px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(28, 36, 52, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 16px 34px -22px rgba(20, 28, 44, 0.28);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transform: none;
+  opacity: 0;
+}
+.s4-badge::before {
+  content: "";
+  width: 20px; height: 20px; margin-right: 3px;
+  display: grid; place-items: center;
+  border-radius: 50%; background: rgba(47, 95, 168, 0.08);
+}
+.s4-badge::after {
+  content: "";
+  position: absolute; left: 24px; top: 50%;
+  width: 7px; height: 7px;
+  border: 1.4px solid var(--accent);
+  border-radius: 2px;
+  transform: translateY(-50%) rotate(45deg);
+}
+.s4-badge span {
+  font-family: var(--name-font); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.005em;
+  color: #375075;
+}
+
+@media (max-width: 1180px) {
+  .callout { width: 20vw; min-width: 186px; padding: 11px 12px 12px; }
+  .callout .t { font-size: 13px; }
+  .callout .d { font-size: 11px; }
+}
+@media (max-width: 980px) {
+  .callout { min-width: 156px; }
+  .s4-badge { left: 4vw; bottom: 4vh; }
+}

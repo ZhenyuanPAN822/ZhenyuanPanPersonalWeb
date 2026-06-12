@@ -1,0 +1,514 @@
+/* iso-room.css — Screen 4: premium 2.5D editorial workspace illustration.
+   Pure HTML/CSS/SVG layers inside #room3d-host. The stage is a 1600×1000
+   design canvas; iso-room.js scales/translates it for the one-shot zoom-out
+   (screen-fills-viewport → full illustration). */
+
+#room3d-host { position: absolute; inset: 0; overflow: hidden; background: #f4f4f2; }
+
+.iso-stage {
+  position: absolute; left: 0; top: 0;
+  width: 1600px; height: 1000px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.iso-stage, .iso-stage * { box-sizing: border-box; }
+.iso-stage .lyr { position: absolute; inset: 0; will-change: transform; }
+.iso-asset-backdrop {
+  position: absolute;
+  inset: -48px;
+  overflow: hidden;
+  pointer-events: none;
+  background: #f4f4f2;
+}
+.iso-asset-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(46px) saturate(1.08) brightness(1.045);
+  transform: scale(1.16);
+  opacity: 0.86;
+}
+.iso-asset-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(244, 244, 242, 0.02) 0%, rgba(244, 244, 242, 0.10) 58%, rgba(244, 244, 242, 0.32) 100%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.30), rgba(244, 244, 242, 0.04) 42%, rgba(231, 229, 224, 0.18));
+}
+.iso-asset-haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(246,246,244,0.72), rgba(246,246,244,0.10) 19%, rgba(246,246,244,0.04) 81%, rgba(246,246,244,0.72)),
+    linear-gradient(180deg, rgba(250,250,248,0.52), rgba(250,250,248,0) 17%, rgba(250,250,248,0) 83%, rgba(230,228,222,0.42));
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.iso-asset-stage {
+  width: 1672px;
+  height: 941px;
+  z-index: 1;
+  overflow: visible;
+  isolation: isolate;
+}
+.iso-asset-edge {
+  position: absolute;
+  left: -360px;
+  top: 0;
+  width: calc(100% + 720px);
+  height: 100%;
+  object-fit: fill;
+  filter: blur(38px) saturate(1.08) brightness(1.04);
+  transform: scaleX(1.018);
+  transform-origin: center;
+  opacity: 0.74;
+  pointer-events: none;
+  z-index: 0;
+}
+.iso-asset-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.46) 4.8%,
+    #000 11.6%,
+    #000 88.4%,
+    rgba(0, 0, 0, 0.46) 95.2%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.46) 4.8%,
+    #000 11.6%,
+    #000 88.4%,
+    rgba(0, 0, 0, 0.46) 95.2%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+.iso-asset-img {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── room: wall + floor (oversized so they bleed past the stage) ──────────── */
+.iso-wall {
+  position: absolute; left: -3000px; right: -3000px; top: -3000px; height: 3690px;
+  background:
+    radial-gradient(1300px 700px at 28% 78%, rgba(255, 249, 238, 0.65), transparent 70%),
+    linear-gradient(104deg, #f7f6f2 0%, #f2f1ed 55%, #edece8 100%);
+}
+.iso-floor {
+  position: absolute; left: -3000px; right: -3000px; top: 690px; height: 3300px;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.22) 0 1px, transparent 1px 118px),
+    linear-gradient(68deg, rgba(28, 36, 52, 0.035) 0 1px, transparent 1px 142px),
+    linear-gradient(#e9e6df, #e2dfd7 38%, #ddd9d0);
+}
+.iso-base {
+  position: absolute; left: -3000px; right: -3000px; top: 676px; height: 14px;
+  background: linear-gradient(#f3f2ee, #eceae4);
+  border-bottom: 1px solid rgba(28, 36, 52, 0.10);
+  box-shadow: 0 18px 42px -34px rgba(28, 36, 52, 0.55);
+}
+.iso-rug {
+  position: absolute; left: 286px; top: 778px; width: 1030px; height: 216px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #e0e5ec 62%, #d8dee7 84%, rgba(216, 222, 231, 0));
+  transform: rotate(-1deg);
+}
+.iso-rug::after {
+  content: ""; position: absolute; inset: 13px 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(28, 36, 52, 0.05);
+}
+
+/* generic soft shadow blob */
+.sh {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(28, 36, 52, 0.18), rgba(28, 36, 52, 0));
+}
+.iso-room-shadow {
+  left: 316px; top: 858px; width: 968px; height: 62px;
+  background: radial-gradient(closest-side, rgba(28, 36, 52, 0.20), rgba(28, 36, 52, 0));
+}
+
+/* ── framed candlestick print (left wall) ─────────────────────────────────── */
+.iso-print {
+  position: absolute; left: 628px; top: 64px; width: 188px; height: 156px;
+  background: #fff;
+  border: 7px solid #8a7a5e;
+  border-radius: 2px;
+  box-shadow: 0 16px 30px -16px rgba(20, 28, 44, 0.35), inset 0 0 0 10px #fff;
+  padding: 15px 14px 22px;
+}
+.iso-print svg { width: 100%; height: 100%; display: block; }
+.iso-print .cap {
+  position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+  font-family: var(--mono); font-size: 7px; letter-spacing: 0.26em; color: #9aa1ac;
+}
+.iso-print2 {
+  position: absolute; left: 458px; top: 318px; width: 92px; height: 116px;
+  background: linear-gradient(170deg, #dfe7ee, #b9c9d6);
+  border: 5px solid #39414f; border-radius: 2px;
+  box-shadow: 0 12px 24px -14px rgba(20, 28, 44, 0.32);
+}
+.iso-print2::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 38%;
+  background: linear-gradient(170deg, rgba(96, 116, 134, 0.5), rgba(70, 88, 106, 0.65));
+  clip-path: polygon(0 55%, 22% 18%, 40% 48%, 62% 8%, 82% 40%, 100% 22%, 100% 100%, 0 100%);
+}
+
+/* ── shelf unit (right, wall) ─────────────────────────────────────────────── */
+.iso-wall-shelf {
+  position: absolute; left: 852px; top: 92px; width: 394px; height: 150px;
+}
+.iso-wall-shelf .ws-plank {
+  position: absolute; left: 0; right: 0; bottom: 24px; height: 18px;
+  background: linear-gradient(90deg, #ead4b2, #d9ba8e);
+  border-radius: 4px;
+  box-shadow: 0 20px 32px -22px rgba(20, 28, 44, 0.45);
+}
+.iso-wall-shelf .ws-plank::before,
+.iso-wall-shelf .ws-plank::after {
+  content: ""; position: absolute; top: -50px; width: 8px; height: 74px;
+  background: #2c3340; border-radius: 4px;
+}
+.iso-wall-shelf .ws-plank::before { left: 46px; }
+.iso-wall-shelf .ws-plank::after { right: 46px; }
+.iso-wall-shelf .ws-globe { position: absolute; left: 20px; top: 2px; width: 76px; height: 100px; }
+.iso-wall-shelf .ws-globe { filter: drop-shadow(0 10px 10px rgba(20,28,44,0.16)); }
+.iso-wall-shelf .ws-bookrow {
+  position: absolute; left: 164px; top: 28px; height: 86px;
+  display: flex; align-items: flex-end; gap: 6px;
+}
+.iso-wall-shelf .ws-bookrow i {
+  position: relative;
+  display: block; width: 20px; height: 82px; border-radius: 3px 3px 1px 1px;
+  background: linear-gradient(#f2f0ea, #c9d1dc);
+  box-shadow: inset -5px 0 0 rgba(28, 36, 52, 0.08);
+}
+.iso-wall-shelf .ws-bookrow i::before {
+  content: ""; position: absolute; left: 50%; top: 11px;
+  width: 2px; height: 54px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: rgba(255,255,255,0.54);
+}
+.iso-wall-shelf .ws-bookrow i:nth-child(2)::after,
+.iso-wall-shelf .ws-bookrow i:nth-child(3)::after,
+.iso-wall-shelf .ws-bookrow i:nth-child(4)::after {
+  position: absolute; left: 50%; top: 14px;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-family: var(--mono); font-size: 5.5px; letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.72);
+}
+.iso-wall-shelf .ws-bookrow i:nth-child(2)::after { content: "METRICS"; }
+.iso-wall-shelf .ws-bookrow i:nth-child(3)::after { content: "FINANCE"; }
+.iso-wall-shelf .ws-bookrow i:nth-child(4)::after { content: "CAUSAL"; }
+.iso-wall-shelf .ws-bookrow i:nth-child(2) { height: 92px; background: #607493; }
+.iso-wall-shelf .ws-bookrow i:nth-child(3) { height: 88px; background: #314052; }
+.iso-wall-shelf .ws-bookrow i:nth-child(4) { height: 96px; background: #7f8fa4; }
+.iso-wall-shelf .ws-bookrow i:nth-child(5) { height: 78px; background: #c8b99e; transform: rotate(-8deg); transform-origin: bottom left; }
+.iso-wall-shelf .ws-stack {
+  position: absolute; left: 104px; top: 86px; width: 92px; height: 28px;
+}
+.iso-wall-shelf .ws-stack b {
+  position: absolute; left: 0; right: 0; height: 12px; border-radius: 3px;
+  background: #c4cee0;
+}
+.iso-wall-shelf .ws-stack b:first-child { bottom: 0; }
+.iso-wall-shelf .ws-stack b:last-child { bottom: 13px; left: 8px; right: 10px; background: #d7c4a7; }
+
+.iso-shelf {
+  position: absolute; left: 1264px; top: 18px; width: 520px; height: 754px;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.iso-shelf::before,
+.iso-shelf::after,
+.iso-shelf .rail {
+  content: ""; position: absolute; top: -36px; bottom: 20px; width: 10px;
+  background: linear-gradient(#2f3743, #1f2630);
+  border-radius: 5px;
+  box-shadow: 0 16px 28px -20px rgba(20, 28, 44, 0.65);
+}
+.iso-shelf::before { left: 30px; }
+.iso-shelf::after { right: 44px; }
+.iso-shelf .rail.mid { left: 238px; }
+.iso-shelf .cell {
+  position: absolute; left: 54px; right: 70px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 0;
+  box-shadow: none;
+}
+.iso-shelf .cell.c1 { top: 126px; height: 180px; }
+.iso-shelf .cell.c2 { top: 348px; height: 212px; }
+.iso-shelf .lip {
+  position: absolute; left: 0; right: 0; height: 22px;
+  background: linear-gradient(90deg, #ead4b2, #d7b78a);
+  border-radius: 5px;
+  box-shadow: 0 14px 24px -18px rgba(28, 36, 52, 0.46);
+}
+.iso-shelf .lip.l0 { top: 86px; }
+.iso-shelf .lip.l1 { top: 304px; }
+.iso-shelf .lip.l2 { top: 526px; }
+.iso-shelf .lip.l3 { top: 696px; }
+.iso-shelf .ledstrip {
+  position: absolute; left: 18px; right: 18px; height: 3px; border-radius: 2px;
+  background: #ffe9c8;
+  box-shadow: 0 6px 16px 2px rgba(255, 224, 176, 0.55);
+}
+.iso-shelf .ledstrip.s1 { top: 318px; }
+.iso-shelf .ledstrip.s2 { top: 540px; }
+.iso-book { position: absolute; bottom: 0; border-radius: 3px 3px 1px 1px; }
+.iso-book::after { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 3px; background: rgba(255, 255, 255, 0.32); border-radius: 2px; }
+#iso-books .iso-book:nth-child(2)::before,
+#iso-books .iso-book:nth-child(5)::before,
+#iso-books .iso-book:nth-child(10)::before {
+  position: absolute; left: 50%; top: 14px;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-family: var(--mono); font-size: 6px; letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.72);
+}
+#iso-books .iso-book:nth-child(2)::before { content: "ECON"; }
+#iso-books .iso-book:nth-child(5)::before { content: "ASSET"; }
+#iso-books .iso-book:nth-child(10)::before { content: "DATA"; }
+.iso-bookflat { position: absolute; border-radius: 2px; }
+.iso-globe { position: absolute; }
+.iso-shelfplant { position: absolute; }
+.iso-globe { filter: drop-shadow(0 8px 8px rgba(20,28,44,0.12)); }
+.iso-shelfplant { filter: drop-shadow(0 7px 7px rgba(20,28,44,0.10)); }
+
+/* ── desk ─────────────────────────────────────────────────────────────────── */
+.iso-desk-top {
+  position: absolute; left: 292px; top: 592px; width: 1058px; height: 188px;
+  border-radius: 12px 12px 6px 6px;
+  background:
+    linear-gradient(176deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 42%),
+    repeating-linear-gradient(90deg, rgba(146, 122, 84, 0.055) 0 2px, transparent 2px 34px),
+    linear-gradient(92deg, #f2ddba, #e3c79a 58%, #d2ad79);
+  clip-path: polygon(13% 0, 94% 0, 100% 100%, 0 100%);
+  box-shadow:
+    0 34px 48px -34px rgba(20, 28, 44, 0.64),
+    0 2px 0 rgba(255, 255, 255, 0.55) inset;
+}
+.iso-desk-front {
+  position: absolute; left: 302px; top: 752px; width: 1026px; height: 44px;
+  border-radius: 2px 2px 9px 9px;
+  background: linear-gradient(#d6c092, #c6ae7f);
+  box-shadow: 0 18px 24px -24px rgba(20, 28, 44, 0.7);
+}
+.iso-desk-front::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background:
+    repeating-linear-gradient(92deg, rgba(146, 122, 84, 0.07) 0 3px, transparent 3px 26px);
+}
+.iso-leg {
+  position: absolute; top: 792px; width: 20px; height: 106px;
+  background: linear-gradient(90deg, #f6f5f2, #e9e8e4 70%, #dcdbd6);
+  border-radius: 3px 3px 5px 5px;
+}
+.iso-leg.l { left: 382px; }
+.iso-leg.r { left: 1244px; }
+.iso-leg.rear-l {
+  left: 498px; top: 660px; height: 166px;
+  background: linear-gradient(90deg, #ecebe6, #dddcd6);
+  opacity: 0.62;
+}
+.iso-leg.rear-r {
+  left: 1146px; top: 660px; height: 166px;
+  background: linear-gradient(90deg, #ecebe6, #dddcd6);
+  opacity: 0.62;
+}
+.iso-leg::after {
+  content: ""; position: absolute; left: -4px; right: -4px; bottom: -4px; height: 7px;
+  background: #d4d3ce; border-radius: 4px;
+}
+
+/* ── monitor ──────────────────────────────────────────────────────────────── */
+.iso-glow {
+  position: absolute; left: 388px; top: 138px; width: 824px; height: 560px;
+  background: radial-gradient(closest-side, rgba(127, 160, 210, 0.34), rgba(127, 160, 210, 0));
+}
+.iso-monitor {
+  position: absolute; left: 514px; top: 222px; width: 572px; height: 380px;
+  background: linear-gradient(168deg, #2b3442, #1d2430 60%);
+  border-radius: 14px;
+  box-shadow:
+    0 44px 72px -30px rgba(20, 28, 44, 0.52),
+    0 14px 22px -20px rgba(20, 28, 44, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  padding: 14px;
+}
+.iso-screen {
+  position: absolute; left: 536px; top: 244px; width: 528px; height: 330px;
+  background: #f6f7f9; border-radius: 5px; overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 -18px 28px rgba(47, 95, 168, 0.035);
+}
+.iso-screen canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.iso-mon-chin {
+  position: absolute; left: 514px; top: 602px; width: 572px; height: 22px;
+  background: linear-gradient(#222a37, #1a212c);
+  border-radius: 0 0 14px 14px;
+}
+.iso-mon-led {
+  position: absolute; left: 796px; top: 611px; width: 8px; height: 4px; border-radius: 2px;
+  background: #8fb2e0; box-shadow: 0 0 8px rgba(143, 178, 224, 0.9);
+}
+.iso-mon-neck {
+  position: absolute; left: 780px; top: 624px; width: 40px; height: 42px;
+  background: linear-gradient(90deg, #66829f, #51688a 60%, #46597a);
+  clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%);
+}
+.iso-mon-foot {
+  position: absolute; left: 710px; top: 660px; width: 180px; height: 14px;
+  background: linear-gradient(#5d7795, #4c6182);
+  border-radius: 8px;
+}
+
+/* ── desk objects ─────────────────────────────────────────────────────────── */
+.iso-keyboard {
+  position: absolute; left: 514px; top: 668px; width: 178px; height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(#f6f7f8, #e1e5eb);
+  box-shadow: 0 5px 9px -5px rgba(28, 36, 52, 0.42), inset 0 1px 0 rgba(255,255,255,0.75);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(28, 36, 52, 0.10) 0 1.2px, transparent 1.2px 13px),
+    repeating-linear-gradient(0deg, rgba(28, 36, 52, 0.08) 0 1.2px, transparent 1.2px 8px);
+  transform: rotate(-1.2deg);
+}
+.iso-keyboard::before {
+  content: ""; position: absolute; left: 58px; right: 58px; bottom: 5px; height: 7px;
+  border-radius: 4px; background: rgba(28, 36, 52, 0.08);
+}
+.iso-mouse {
+  position: absolute; left: 944px; top: 670px; width: 28px; height: 18px;
+  border-radius: 50% 50% 46% 46%;
+  background: linear-gradient(#39414f, #2c333e);
+  box-shadow: 0 3px 5px -2px rgba(28, 36, 52, 0.45);
+}
+.iso-mouse::before {
+  content: ""; position: absolute; left: 7px; top: 3px; width: 11px; height: 4px;
+  border-radius: 50%; background: rgba(255,255,255,0.12);
+}
+.iso-mug {
+  position: absolute; left: 1016px; top: 648px; width: 34px; height: 40px;
+  background: linear-gradient(90deg, #ffffff, #eef1f4 70%, #dde2e7);
+  border-radius: 4px 4px 7px 7px;
+  box-shadow: 0 5px 9px -6px rgba(28, 36, 52, 0.45), inset -6px 0 10px rgba(28,36,52,0.05);
+}
+.iso-mug::before {
+  content: ""; position: absolute; top: 6px; left: 5px; right: 5px; height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 45%, #c9a47a 0 38%, #f4f2ed 40% 100%);
+  box-shadow: 0 0 0 1px rgba(28, 36, 52, 0.08);
+}
+.iso-mug::after {
+  content: ""; position: absolute; right: -13px; top: 9px; width: 13px; height: 18px;
+  border: 4px solid #e8eaec; border-left: none;
+  border-radius: 0 12px 12px 0;
+}
+.iso-notebook {
+  position: absolute; left: 1082px; top: 668px; width: 72px; height: 26px;
+  background: linear-gradient(#566780, #3f4e66);
+  border-radius: 3px;
+  transform: rotate(2deg);
+  box-shadow: 0 3px 6px -3px rgba(28, 36, 52, 0.45);
+}
+.iso-notebook::before {
+  content: ""; position: absolute; right: 12px; top: 0; bottom: 0; width: 5px;
+  background: #2c3340;
+}
+.iso-notebook::after {
+  content: "DID"; position: absolute; left: 8px; top: 7px;
+  font-family: var(--mono); font-size: 7px; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.62);
+}
+.iso-pen {
+  position: absolute; left: 1076px; top: 697px; width: 52px; height: 4px;
+  background: linear-gradient(90deg, #23282f 70%, #8a93a0 70%);
+  border-radius: 2px; transform: rotate(-6deg);
+}
+.iso-deskbooks { position: absolute; left: 424px; top: 630px; width: 96px; height: 46px; }
+.iso-deskbooks .b {
+  position: absolute; left: 0; right: 0; height: 14px; border-radius: 3px;
+  box-shadow: 0 2px 3px -2px rgba(28, 36, 52, 0.4);
+}
+.iso-deskbooks .b1 { bottom: 0; background: #5f7ea8; }
+.iso-deskbooks .b2 { bottom: 14px; left: 3px; right: 5px; background: #cfc4ac; transform: rotate(-1.4deg); }
+.iso-deskbooks .b3 { bottom: 28px; left: 7px; right: 2px; background: #8a6f5c; transform: rotate(1.2deg); }
+.iso-deskbooks .b::after {
+  content: ""; position: absolute; left: 9px; right: 9px; top: 5px; height: 2px;
+  border-radius: 2px; background: rgba(255,255,255,0.38);
+}
+.iso-lamp { position: absolute; left: 1132px; top: 520px; width: 118px; height: 164px; }
+.iso-lamp .base {
+  position: absolute; left: 48px; bottom: 0; width: 52px; height: 9px;
+  background: linear-gradient(#4d5867, #303946); border-radius: 5px;
+  box-shadow: 0 4px 8px -5px rgba(28,36,52,0.55);
+}
+.iso-lamp .arm {
+  position: absolute; left: 70px; bottom: 7px; width: 7px; height: 112px;
+  background: linear-gradient(90deg, #4d5867, #39424f);
+  border-radius: 4px; transform: rotate(13deg); transform-origin: bottom center;
+  box-shadow: inset 2px 0 0 rgba(255,255,255,0.08);
+}
+.iso-lamp .head {
+  position: absolute; left: 14px; top: 10px; width: 62px; height: 24px;
+  background: linear-gradient(135deg, #596575, #303946);
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+  border-radius: 4px;
+  transform: rotate(-16deg);
+}
+.iso-lamp .head::after {
+  content: ""; position: absolute; left: 10px; right: 10px; bottom: 3px; height: 2px;
+  border-radius: 2px; background: rgba(255,255,255,0.20);
+}
+.iso-lamp .lite {
+  position: absolute; left: 8px; top: 28px; width: 58px; height: 42px;
+  background: radial-gradient(closest-side, rgba(255, 226, 178, 0.8), rgba(255, 226, 178, 0));
+  border-radius: 50%;
+}
+.iso-paper {
+  position: absolute; left: 912px; top: 654px; width: 78px; height: 46px;
+  background: #fdfdfb; border-radius: 2px;
+  box-shadow: 0 3px 6px -3px rgba(28, 36, 52, 0.35);
+  transform: rotate(-4deg);
+  padding: 5px 6px;
+}
+.iso-paper .h { font-family: Georgia, serif; font-weight: 700; font-size: 7px; line-height: 1.1; color: #27303f; letter-spacing: 0.01em; }
+.iso-paper .bars { position: absolute; right: 6px; bottom: 5px; display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+.iso-paper .bars i { width: 4px; border-radius: 1px; }
+.iso-bull { position: absolute; left: 438px; top: 602px; width: 78px; height: 52px; }
+
+/* ── tall plant (left) ────────────────────────────────────────────────────── */
+.iso-plant { position: absolute; left: 390px; top: 522px; width: 118px; height: 206px; }
+
+/* ── person + chair (foreground) ──────────────────────────────────────────── */
+.iso-person {
+  position: absolute; left: 632px; top: 470px; width: 336px; height: 506px;
+}
+.iso-person svg { width: 100%; height: 100%; display: block; }
+.iso-person .breathe { animation: iso-breathe 4.2s ease-in-out infinite; }
+@keyframes iso-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .iso-person .breathe { animation: none; }
+}

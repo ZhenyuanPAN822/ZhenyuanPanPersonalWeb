@@ -1,0 +1,601 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zhenyuan Pan — Research Terminal</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f6f7f9'/%3E%3Cpath d='M8 21h16M10 18l4-4 3 3 5-7' fill='none' stroke='%232f5fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Spectral:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="terminal.css" />
+<link rel="stylesheet" href="research.css" />
+<link rel="stylesheet" href="room.css" />
+<link rel="stylesheet" href="iso-room.css" />
+<link rel="stylesheet" href="resume.css" />
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --ink: #1b2230;
+    --ink-soft: #44505f;
+    --ink-mute: #79828f;
+    --up: #5f7ea8;
+    --down: #b06a63;
+    --hair: rgba(28, 36, 52, 0.12);
+    --name-font: 'Source Serif 4', Georgia, serif;
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--name-font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* ── Full-screen hero ───────────────────────────────────────────── */
+  .hero {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* Chart layer — kept as a self-contained fixed stage so a later one-shot
+     scroll can scale/translate it down into a TradingView-style panel. */
+  .chart-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    transform-origin: center center;
+    will-change: transform;
+  }
+  #hero-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Soft white veil so the centred text stays highly readable */
+  .veil {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 46% 42% at 50% 50%,
+        rgba(246, 247, 249, 0.94) 0%,
+        rgba(246, 247, 249, 0.80) 38%,
+        rgba(246, 247, 249, 0.0) 72%);
+    -webkit-backdrop-filter: blur(3.5px);
+    backdrop-filter: blur(3.5px);
+    -webkit-mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, #000 30%, transparent 70%);
+    mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, #000 30%, transparent 70%);
+  }
+
+  /* ── Centred content ────────────────────────────────────────────── */
+  .content {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6vh 7vw;
+    gap: 0;
+  }
+  .name {
+    font-family: var(--name-font);
+    font-weight: 500;
+    font-size: clamp(34px, 8.2vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .rule {
+    width: 54px;
+    height: 1px;
+    background: var(--hair);
+    margin: clamp(18px, 2.6vh, 30px) 0 clamp(16px, 2.4vh, 26px);
+  }
+  .degree {
+    font-family: var(--name-font);
+    font-weight: 400;
+    font-size: clamp(17px, 2.05vw, 23px);
+    color: var(--ink-soft);
+    letter-spacing: 0.005em;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: clamp(18px, 2.6vh, 28px);
+  }
+  .meta span {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: clamp(10.5px, 1.05vw, 12.5px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* ── Research-terminal chrome (peripheral, low key) ─────────────── */
+  .chrome { transition: opacity 0.4s ease; }
+  body[data-chrome="off"] .chrome { opacity: 0; pointer-events: none; }
+
+  .chrome .edge {
+    position: fixed;
+    z-index: 4;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tl { top: 22px; left: 26px; }
+  .tr { top: 22px; right: 26px; gap: 18px; }
+  .bl { bottom: 22px; left: 26px; gap: 14px; }
+  .br { bottom: 22px; right: 26px; }
+  .dim { color: rgba(121, 130, 143, 0.6); }
+
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--up);
+    box-shadow: 0 0 0 0 rgba(95, 126, 168, 0.5);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(95,126,168,0.45); }
+    70% { box-shadow: 0 0 0 7px rgba(95,126,168,0); }
+    100% { box-shadow: 0 0 0 0 rgba(95,126,168,0); }
+  }
+
+  .tick-price { color: var(--ink-soft); font-weight: 500; letter-spacing: 0.08em; }
+  .tick-delta.up { color: var(--up); }
+  .tick-delta.down { color: var(--down); }
+
+  /* corner crop marks — figure framing */
+  .crop { position: fixed; z-index: 4; width: 14px; height: 14px; border-color: var(--hair); border-style: solid; border-width: 0; }
+  .crop.c1 { top: 16px; left: 16px; border-top-width: 1px; border-left-width: 1px; }
+  .crop.c2 { top: 16px; right: 16px; border-top-width: 1px; border-right-width: 1px; }
+  .crop.c3 { bottom: 16px; left: 16px; border-bottom-width: 1px; border-left-width: 1px; }
+  .crop.c4 { bottom: 16px; right: 16px; border-bottom-width: 1px; border-right-width: 1px; }
+
+  /* scroll hint (foreshadows the second screen) */
+  .scroll-hint {
+    position: fixed;
+    z-index: 4;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .scroll-hint .chev {
+    width: 9px; height: 9px;
+    border-right: 1px solid var(--ink-mute);
+    border-bottom: 1px solid var(--ink-mute);
+    transform: rotate(45deg);
+    animation: bob 1.9s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(45deg); opacity: 0.4; }
+    50% { transform: translateY(4px) rotate(45deg); opacity: 0.9; }
+  }
+
+  @media (max-width: 560px) {
+    .name { white-space: normal; }
+    .degree { white-space: normal; }
+    .tr .clock-utc, .br { display: none; }
+    .scroll-hint { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dot, .chev { animation: none; }
+  }
+
+</style>
+</head>
+<body data-chrome="on">
+  <main class="hero" data-screen-label="Hero">
+    <!-- Chart layer: morphs (scale + clip) from full-screen into the
+         Screen 2 center panel during the one-shot scroll. -->
+    <div class="chart-clip" id="chart-clip">
+      <div class="chart-pan" id="chart-pan">
+        <canvas id="hero-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="veil"></div>
+
+    <section class="content">
+      <h1 class="name">Zhenyuan Pan</h1>
+      <div class="rule"></div>
+      <p class="degree">M.A. Economics Candidate at NYU</p>
+      <div class="meta">
+        <span>BNU-HKBU UIC · Applied Economics</span>
+        <span>Finance · Markets · Quant Research · Economic Modeling</span>
+      </div>
+    </section>
+
+    <!-- Terminal chrome -->
+    <div class="chrome">
+      <div class="crop c1"></div><div class="crop c2"></div>
+      <div class="crop c3"></div><div class="crop c4"></div>
+
+      <div class="edge tl">
+        <span class="dot"></span>
+        <span>ZP · Research Terminal</span>
+      </div>
+      <div class="edge tr">
+        <span class="clock-utc dim" id="clock-utc">UTC 00:00:00</span>
+        <span class="clock-local" id="clock-local">00:00:00</span>
+      </div>
+      <div class="edge bl">
+        <span>ZPX:IDX · Daily</span>
+        <span class="tick-price" id="tick-price">—</span>
+        <span class="tick-delta up" id="tick-delta">▲ 0.00</span>
+      </div>
+      <div class="edge br dim">Fig. 01 — Market Overview</div>
+
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <span class="chev"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- invisible element that creates scroll length for the one-shot morph -->
+  <div class="scroll-driver"></div>
+
+  <!-- ════════════════ SCREEN 2 — EQUITY & QUANT TERMINAL ════════════════ -->
+  <section class="s2" aria-label="Equity and Quant Terminal" data-screen-label="Terminal">
+    <header class="s2-head">
+      <div class="head-l">
+        <div class="s2-kicker">02 / Markets in Practice</div>
+        <div class="s2-title">Equity &amp; Quant Terminal</div>
+        <p class="s2-desc">Hands-on market experience through internships, strategy research, and live / simulated market practice.</p>
+      </div>
+      <div class="head-r">
+        <div class="sess"><span class="live-dot"></span> Session · Live</div>
+        <div id="s2-clock">UTC 00:00:00</div>
+        <div>ZPX:IDX · Daily</div>
+      </div>
+    </header>
+
+    <div class="s2-body">
+      <!-- LEFT — strategy selector -->
+      <aside class="panel left-panel">
+        <div class="panel-head"><span class="ph-label">Strategies</span><span class="ph-count" id="strat-count"></span></div>
+        <div class="panel-body" id="strat-list"></div>
+        <div class="strat-foot">Select a strategy to project its signals, factors and backtest snapshot onto the chart →</div>
+      </aside>
+
+      <!-- CENTER — chart workstation -->
+      <div class="center">
+        <div class="chart-card">
+          <div class="chart-toolbar">
+            <div class="tb-sym"><span class="sy">ZPX:IDX</span><span class="sn">Equity Index · Daily</span></div>
+            <div class="tb-ohlc" id="tb-ohlc"></div>
+            <div class="tb-spacer"></div>
+            <div class="tf-group">
+              <button class="tf" type="button">1D</button><button class="tf sel" type="button">1W</button><button class="tf" type="button">1M</button><button class="tf" type="button">3M</button><button class="tf" type="button">1Y</button>
+            </div>
+            <div class="tb-tools">
+              <span class="tool" title="Crosshair">＋</span><span class="tool" title="Trendline">╱</span><span class="tool" title="Measure">▱</span><span class="tool" title="Settings">⚙</span>
+            </div>
+          </div>
+          <div class="chart-host" id="chart-host">
+            <div class="ov ov-overlay" id="ov-overlay" style="inset:0">
+              <div class="ov ov-legend" id="ov-legend"></div>
+              <div class="ov-markers" id="ov-markers" style="position:absolute;inset:0"></div>
+              <div class="ov-annots" id="ov-annots" style="position:absolute;inset:0"></div>
+            </div>
+            <div class="ov ov-axis" id="ov-axis"></div>
+            <div class="ov-lasttag" id="ov-lasttag" style="display:none"></div>
+          </div>
+          <div class="vol-wrap">
+            <span class="vol-label">Vol</span>
+            <canvas id="vol-canvas"></canvas>
+          </div>
+        </div>
+        <div class="detail" id="detail"></div>
+      </div>
+
+      <!-- RIGHT — internship experience -->
+      <aside class="panel right-panel">
+        <div class="panel-head"><span class="ph-label">Experience · Internships</span><span class="ph-count" id="intern-count"></span></div>
+        <div class="panel-body scroll" id="intern-list"></div>
+      </aside>
+    </div>
+
+    <footer class="s2-foot">
+      <div class="grp"><span>Fig. 02 — Markets in Practice</span><span class="sig" id="foot-signal"></span></div>
+      <div class="grp"><span id="foot-tick">ZPX:IDX —</span><span>Illustrative · fictional data</span></div>
+    </footer>
+  </section>
+
+  <!-- ════════════════ SCREEN 3 — RESEARCH CONSOLE ════════════════ -->
+  <section class="s3" aria-label="Research Console" data-screen-label="Research">
+    <header class="s2-head s3-head">
+      <div class="head-l">
+        <div class="s2-kicker">03 / Empirical Research</div>
+        <div class="s2-title">Research Console</div>
+        <p class="s2-desc">From market signals to economic shocks — empirical analysis of how real economies absorb disruption.</p>
+      </div>
+      <div class="head-r">
+        <div class="sess"><span class="live-dot"></span> Research · Active</div>
+        <div id="s3-clock">UTC 00:00:00</div>
+        <div id="s3-proj-code">RED-SEA · DID</div>
+      </div>
+    </header>
+
+    <div class="r-body">
+      <!-- LEFT — research project selector (reuses the strategy component) -->
+      <aside class="panel left-panel">
+        <div class="panel-head"><span class="ph-label">Research Projects</span><span class="ph-count" id="proj-count"></span></div>
+        <div class="panel-body" id="proj-list"></div>
+        <div class="proj-foot">Select a project to load its event study, design and findings into the console →</div>
+      </aside>
+
+      <!-- CENTER — research console -->
+      <div class="r-center">
+        <div class="r-main">
+          <div class="r-cardhead">
+            <span class="rc-title" id="es-title">Event Study</span>
+            <span class="rc-sub" id="es-sub">Dynamic treatment effects · 95% CI</span>
+          </div>
+          <div class="r-plot" id="es-plot"></div>
+        </div>
+        <div class="r-lower">
+          <div class="panel">
+            <div class="panel-head"><span class="ph-label" id="corr-label">Global Shipping Network</span></div>
+            <div class="r-plot" id="corr-plot"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><span class="ph-label" id="panel-label">Panel Data Overview</span></div>
+            <div class="panel-body sm-wrap" id="sm-plot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — research details -->
+      <aside class="panel right-panel">
+        <div class="panel-head"><span class="ph-label">Project · Details</span><span class="ph-count" id="rdetail-code"></span></div>
+        <div class="panel-body scroll rdetail-body" id="rdetail"></div>
+        <div class="rdetail-foot"><span class="r-viewfull">View full project →</span></div>
+      </aside>
+    </div>
+
+    <!-- bottom metrics strip -->
+    <div class="metrics-strip" id="metrics-strip"></div>
+  </section>
+
+  <!-- ════════════════ SCREEN 4 — METHODS & SYSTEMS CONSOLE ════════════════ -->
+  <section class="s4" aria-label="Methods and Systems Console" data-screen-label="Workspace">
+    <div class="room">
+      <div id="room3d-host"></div>
+
+      <svg id="s4-wires" aria-hidden="true"></svg>
+
+      <aside class="callout co-l" id="co-econ" data-side="r" data-ax="47" data-ay="36">
+        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 10.5l3-3 2.2 2 3.8-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+        <div class="co-body">
+          <div class="t">Econometrics</div>
+          <div class="d">Causal inference, panel data methods, and robustness frameworks.</div>
+        </div>
+      </aside>
+      <aside class="callout co-l" id="co-pipe" data-side="r" data-ax="39" data-ay="53">
+        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="4" rx="5" ry="2" stroke="currentColor" stroke-width="1.3"></ellipse><path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2" stroke="currentColor" stroke-width="1.3"></path></svg></span>
+        <div class="co-body">
+          <div class="t">Data Pipeline</div>
+          <div class="d">Automated ETL, validation, and versioned datasets at scale.</div>
+        </div>
+      </aside>
+      <aside class="callout co-l" id="co-data" data-side="r" data-ax="42" data-ay="68">
+        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"></circle><path d="M2 8h12M8 2c-1.8 1.8-2.6 3.8-2.6 6S6.2 12.2 8 14c1.8-1.8 2.6-3.8 2.6-6S9.8 3.8 8 2z" stroke="currentColor" stroke-width="1.1"></path></svg></span>
+        <div class="co-body">
+          <div class="t">Financial Data Platforms</div>
+          <div class="d">Bloomberg, FactSet, I/B/E/S, LSEG, Quandl, Haver/IMF, and more.</div>
+        </div>
+      </aside>
+      <aside class="callout co-r" id="co-py" data-side="l" data-ax="66" data-ay="32">
+        <span class="co-icon co-glyph">Py</span>
+        <div class="co-body">
+          <div class="t">Python</div>
+          <div class="d">Data processing, analysis, visualization, and model prototyping.</div>
+        </div>
+      </aside>
+      <aside class="callout co-r" id="co-stata" data-side="l" data-ax="68" data-ay="45">
+        <span class="co-icon co-glyph">St</span>
+        <div class="co-body">
+          <div class="t">STATA</div>
+          <div class="d">Econometric modeling, DID, event studies, and panel estimations.</div>
+        </div>
+      </aside>
+      <aside class="callout co-r" id="co-ai" data-side="l" data-ax="73" data-ay="56">
+        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.2" stroke="currentColor" stroke-width="1.3"></circle><circle cx="8" cy="2.5" r="1.2" fill="currentColor"></circle><circle cx="13.5" cy="8" r="1.2" fill="currentColor"></circle><circle cx="8" cy="13.5" r="1.2" fill="currentColor"></circle><circle cx="2.5" cy="8" r="1.2" fill="currentColor"></circle><path d="M8 4.5v1.3M11.5 8h-1.3M8 11.5v-1.3M4.5 8h1.3" stroke="currentColor" stroke-width="1.1"></path></svg></span>
+        <div class="co-body">
+          <div class="t">AI Workflow</div>
+          <div class="d">LLM-assisted research, code generation, and literature synthesis.</div>
+        </div>
+      </aside>
+      <aside class="callout co-r" id="co-ros" data-side="l" data-ax="66" data-ay="70">
+        <span class="co-icon co-glyph">&gt;_</span>
+        <div class="co-body">
+          <div class="t">Research Operating System</div>
+          <div class="d">Integrated tools, reproducible workflows, and knowledge management.</div>
+        </div>
+      </aside>
+    </div>
+
+    <header class="s4-head">
+      <span class="s2-kicker">04 / Research Operating System</span>
+      <div class="s2-title">Methods &amp; Systems Console</div>
+      <div class="s4-sub">The infrastructure behind insight and impact.</div>
+    </header>
+    <div class="s4-corner">ZP · Workspace</div>
+    <div class="s4-fig">Fig. 04 — Research Operating System</div>
+    <div class="s4-badge"><span>Evidence.</span><span>Methods.</span><span>Impact.</span></div>
+  </section>
+
+  <!-- SCREEN 5 - RESUME ARCHIVE -->
+  <section class="s5" aria-label="Resume Archive" data-screen-label="Resume Archive">
+    <div class="s5-bg" aria-hidden="true"></div>
+
+    <header class="s5-head">
+      <div>
+        <span class="s2-kicker">05 / Resume Archive</span>
+        <h2 class="s5-title">Timeline &amp; Contact</h2>
+        <p class="s5-sub">A compact archive of my academic path, professional experience, and contact points.</p>
+      </div>
+      <div class="s5-status"><span>Archive Ready</span><span>PDF Preview</span></div>
+    </header>
+
+    <div class="s5-layout">
+      <aside class="s5-timeline" aria-label="Resume timeline">
+        <div class="s5-panel-label">Archive Index</div>
+        <ol>
+          <li><time>2026</time><span>NYU M.A. Economics</span></li>
+          <li><time>2025</time><span>Shenzhen International Financial Research Association</span></li>
+          <li><time>2025</time><span>Zhuhai Gaoke Venture Capital</span></li>
+          <li><time>2024</time><span>Yinhua Fund Management</span></li>
+          <li><time>2023</time><span>Sinosafe General Insurance</span></li>
+          <li><time>2023</time><span>Guangdong ZhongAn Law Firm</span></li>
+          <li><time>2022</time><span>BNU-HKBU UIC</span></li>
+        </ol>
+      </aside>
+
+      <section class="resume-viewer" id="resume-viewer" aria-label="Resume PDF viewer">
+        <div class="rv-toolbar">
+          <div class="rv-title">
+            <span class="rv-dot"></span>
+            <div>
+              <strong>Zhenyuan Pan - Resume</strong>
+              <span id="rv-page-status">Page 1 / 2</span>
+            </div>
+          </div>
+          <div class="rv-actions">
+            <button type="button" class="rv-btn" id="rv-zoom-out" aria-label="Zoom out">-</button>
+            <span class="rv-zoom" id="rv-zoom-label">100%</span>
+            <button type="button" class="rv-btn" id="rv-zoom-in" aria-label="Zoom in">+</button>
+            <a class="rv-btn rv-link" href="assets/ZhenyuanPan_Resume.pdf" download>Download</a>
+            <button type="button" class="rv-btn" id="rv-print">Print</button>
+            <button type="button" class="rv-btn" id="rv-fullscreen">Fullscreen</button>
+            <a class="rv-btn rv-link" href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener">Open</a>
+          </div>
+        </div>
+
+        <div class="rv-scroll" id="rv-scroll" tabindex="0">
+          <div class="rv-pages" id="rv-pages">
+            <article class="rv-page rv-pdf-page" data-page="1">
+              <img src="assets/resume-pages/page-1.png" alt="Zhenyuan Pan resume page 1" loading="eager" />
+            </article>
+
+            <article class="rv-page rv-pdf-page" data-page="2">
+              <img src="assets/resume-pages/page-2.png" alt="Zhenyuan Pan resume page 2" loading="lazy" />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <aside class="s5-contact" aria-label="Contact and links">
+        <div class="s5-panel-label">Contact &amp; Links</div>
+        <p class="s5-open">Open to research assistant, pre-doc, finance research, and data-driven economics opportunities.</p>
+        <div class="contact-links">
+          <a href="mailto:s230001081@mail.uic.edu.cn"><span>Email</span><b>s230001081@mail.uic.edu.cn</b></a>
+          <a href="https://www.linkedin.com/" target="_blank" rel="noopener"><span>LinkedIn</span><b>Profile</b></a>
+          <a href="https://github.com/" target="_blank" rel="noopener"><span>GitHub</span><b>Projects</b></a>
+          <a href="#" target="_blank" rel="noopener"><span>Research Portfolio</span><b>Archive</b></a>
+          <a href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener"><span>Resume PDF</span><b>Open file</b></a>
+        </div>
+        <div class="contact-actions">
+          <a href="assets/ZhenyuanPan_Resume.pdf" download>Download Resume</a>
+          <button type="button" id="s5-print-resume">Print Resume</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Full-page frosted internship modal -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modal-close" type="button"><span class="x">✕</span> Close</button>
+      <div class="modal-scroll" id="modal-scroll"></div>
+    </div>
+  </div>
+  <!-- candlestick engine -->
+  <script src="hero-chart.js"></script>
+  <!-- screen 2 content + behaviour -->
+  <script src="data.js"></script>
+  <script src="terminal.js"></script>
+  <!-- screen 3 content + behaviour -->
+  <script src="research-data.js"></script>
+  <script src="research.js"></script>
+  <!-- screen 4 workspace illustration (2.5D, HTML/CSS/SVG) -->
+  <script src="iso-room.js"></script>
+  <script src="room.js"></script>
+  <script src="resume.js"></script>
+  <!-- candle → coefficient metamorphosis layer -->
+  <script src="morph-overlay.js"></script>
+  <!-- one-shot scroll morph (screen 1 → 2 → 3) -->
+  <script src="transition.js"></script>
+
+  <!-- live clock + ticker readouts -->
+  <script>
+    (function () {
+      const pad = (n) => String(n).padStart(2, "0");
+      const utc = document.getElementById("clock-utc");
+      const loc = document.getElementById("clock-local");
+      const s2c = document.getElementById("s2-clock");
+      const s3c = document.getElementById("s3-clock");
+      function tick() {
+        const d = new Date();
+        const u = "UTC " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
+        if (utc) utc.textContent = u;
+        if (s2c) s2c.textContent = u;
+        if (s3c) s3c.textContent = u;
+        if (loc) loc.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+      }
+      tick(); setInterval(tick, 1000);
+
+      const tp = document.getElementById("tick-price");
+      const td = document.getElementById("tick-delta");
+      const ft = document.getElementById("foot-tick");
+      setInterval(function () {
+        const k = window.__heroLastPrice && window.__heroLastPrice();
+        if (!k) return;
+        const delta = k.c - k.o;
+        const up = delta >= 0;
+        if (tp) tp.textContent = k.c.toFixed(2);
+        if (td) {
+          td.className = "tick-delta " + (up ? "up" : "down");
+          td.textContent = (up ? "▲ " : "▼ ") + Math.abs(delta).toFixed(2);
+        }
+        if (ft) ft.innerHTML = "ZPX:IDX " + k.c.toFixed(2) +
+          ' <span class="' + (up ? "up" : "down") + '">' + (up ? "▲" : "▼") + " " + Math.abs(delta).toFixed(2) + "</span>";
+      }, 550);
+    })();
+  </script>
+</body>
+</html>
+

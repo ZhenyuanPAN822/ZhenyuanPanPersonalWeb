@@ -1,0 +1,103 @@
+/* research.css — Screen 3 (Research Console). Reuses the Screen 2 shell classes
+   (.panel, .panel-head, .strat, .s2-head…) so the container language is
+   continuous; the morph cross-fades content inside an identical frame. */
+
+/* Root mirrors .s2 grid exactly so the frame appears static during the morph */
+.s3 {
+  position: fixed; inset: 0; z-index: 6;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 16px 18px;
+  opacity: 0;
+  pointer-events: none;
+  font-family: var(--name-font);
+}
+body.s3-live .s3 { pointer-events: auto; }
+
+.s3-head .live-dot { background: var(--accent); }
+
+/* Body: same 3-column rhythm as Screen 2 */
+.r-body { display: grid; grid-template-columns: 300px minmax(0, 1fr) 384px; gap: 12px; min-height: 0; }
+
+/* Center: event-study main + two lower panels */
+.r-center { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.r-main { flex: 1.55; min-height: 0; display: flex; flex-direction: column; background: transparent; border: 1px solid var(--line); border-radius: 13px; overflow: hidden; }
+.r-lower { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; flex: 1; min-height: 0; }
+
+.r-cardhead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px 15px 10px; border-bottom: 1px solid var(--line); flex-shrink: 0; background: var(--panel); }
+.r-cardhead .rc-title { font-family: var(--name-font); font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+.r-cardhead .rc-sub { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+.r-plot { position: relative; flex: 1; min-height: 0; }
+.r-plot svg { display: block; width: 100%; height: 100%; }
+
+/* event-study visual tokens */
+.es-grid { stroke: var(--line); stroke-width: 1; }
+.es-zero { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 3 3; }
+.es-ci { stroke: var(--accent); stroke-width: 1.5; opacity: 0.5; }
+.es-ci-cap { stroke: var(--accent); stroke-width: 1.5; opacity: 0.5; }
+.es-pt { fill: var(--accent); }
+.es-pt-pre { fill: #fff; stroke: var(--accent); stroke-width: 1.5; }
+.es-axis { font-family: var(--mono); font-size: 10px; fill: var(--ink-mute); }
+.es-axis-title { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; fill: var(--ink-mute); text-transform: uppercase; }
+.es-band { fill: var(--accent); opacity: 0.05; }
+
+/* corridor / network schematic */
+.corr-grid { stroke: var(--line); stroke-width: 1; }
+.corr-route { fill: none; stroke: var(--accent); stroke-width: 1.6; opacity: 0.55; }
+.corr-route.alt { stroke: var(--ink-mute); stroke-width: 1.3; opacity: 0.4; stroke-dasharray: 4 4; }
+.corr-node { fill: #fff; stroke: var(--accent); stroke-width: 1.6; }
+.corr-node.hot { fill: var(--accent); }
+.corr-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; fill: var(--ink-soft); }
+
+/* small-multiples panel data */
+.sm-wrap { display: flex; flex-direction: column; min-height: 0; }
+.sm-row { display: flex; align-items: center; gap: 12px; padding: 0 14px; flex: 1; min-height: 0; border-top: 1px solid var(--line); }
+.sm-row:first-child { border-top: none; }
+.sm-label { width: 96px; flex-shrink: 0; font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; color: var(--ink-soft); line-height: 1.3; }
+.sm-spark { flex: 1; height: 38px; }
+.sm-spark svg { display: block; width: 100%; height: 100%; }
+.sm-line { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+.sm-area { fill: var(--accent); opacity: 0.07; }
+.sm-base { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
+.sm-val { font-family: var(--mono); font-size: 11px; color: var(--ink); width: 44px; text-align: right; flex-shrink: 0; }
+.sm-val.neg { color: var(--down); } .sm-val.pos { color: var(--up); }
+
+/* Right: research details */
+.rdetail-body { padding: 0; }
+.r-sec { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.r-sec .rs-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 9px; }
+.r-sec .rs-lede { font-family: var(--name-font); font-size: 14px; line-height: 1.5; color: var(--ink); text-wrap: pretty; }
+.r-sec ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.r-sec li { position: relative; padding-left: 16px; font-family: var(--name-font); font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+.r-sec li::before { content: ""; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent-line); }
+.r-sec.tags li { padding-left: 0; }
+.r-sec .rs-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.r-sec .rs-chip { font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; color: var(--ink-soft); background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+.rdetail-foot { padding: 13px 16px; border-top: 1px solid var(--line); }
+.r-viewfull { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; color: var(--accent); text-decoration: none; cursor: pointer; }
+.r-viewfull:hover { text-decoration: underline; }
+
+/* Bottom metrics strip */
+.metrics-strip { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 11px; overflow: hidden; }
+.metric { padding: 11px 16px; border-left: 1px solid var(--line); }
+.metric:first-child { border-left: none; }
+.metric .mv { font-family: var(--mono); font-size: 17px; color: var(--ink); font-weight: 500; letter-spacing: 0.01em; }
+.metric .ml { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px; }
+.metric .mv .accent { color: var(--accent); }
+
+/* the project selector reuses .strat; just add a footer note variant */
+.proj-foot { padding: 12px 15px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--ink-mute); line-height: 1.6; }
+
+@media (max-width: 1180px) {
+  .r-body { grid-template-columns: 250px minmax(0,1fr) 300px; }
+}
+@media (max-width: 980px) {
+  .s3 { overflow-y: auto; }
+  .r-body { grid-template-columns: 1fr; grid-auto-rows: min-content; }
+  .r-center { order: -1; height: 60vh; }
+  .r-lower { grid-template-columns: 1fr 1fr; }
+  .metrics-strip { grid-auto-flow: row; grid-auto-columns: auto; }
+  .metric { border-left: none; border-top: 1px solid var(--line); }
+  .metric:first-child { border-top: none; }
+}
