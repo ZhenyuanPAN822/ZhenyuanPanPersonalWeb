@@ -4,6 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Zhenyuan Pan — Research Terminal</title>
+<meta name="description" content="Personal website of Zhenyuan Pan, an economics research and finance-focused portfolio with market, research, methods, resume, and contact sections." />
+<meta name="theme-color" content="#f6f7f9" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Zhenyuan Pan — Research Terminal" />
+<meta property="og:description" content="Economics, finance research, data workflows, resume archive, and contact points for Zhenyuan Pan." />
+<meta property="og:image" content="assets/s4-workspace-clean.png" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f6f7f9'/%3E%3Cpath d='M8 21h16M10 18l4-4 3 3 5-7' fill='none' stroke='%232f5fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -498,7 +505,7 @@
             <button type="button" class="rv-btn" id="rv-zoom-out" aria-label="Zoom out">-</button>
             <span class="rv-zoom" id="rv-zoom-label">100%</span>
             <button type="button" class="rv-btn" id="rv-zoom-in" aria-label="Zoom in">+</button>
-            <a class="rv-btn rv-link" href="assets/ZhenyuanPan_Resume.pdf" download>Download</a>
+          <a class="rv-btn rv-link" id="rv-download-resume" href="assets/ZhenyuanPan_Resume.pdf" download>Download</a>
             <button type="button" class="rv-btn" id="rv-print">Print</button>
             <button type="button" class="rv-btn" id="rv-fullscreen">Fullscreen</button>
             <a class="rv-btn rv-link" href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener">Open</a>
@@ -508,11 +515,11 @@
         <div class="rv-scroll" id="rv-scroll" tabindex="0">
           <div class="rv-pages" id="rv-pages">
             <article class="rv-page rv-pdf-page" data-page="1">
-              <img src="assets/resume-pages/page-1.png" alt="Zhenyuan Pan resume page 1" loading="eager" />
+              <img src="assets/resume-pages/page-1.png" alt="Zhenyuan Pan resume page 1" width="1638" height="2316" loading="eager" decoding="async" />
             </article>
 
             <article class="rv-page rv-pdf-page" data-page="2">
-              <img src="assets/resume-pages/page-2.png" alt="Zhenyuan Pan resume page 2" loading="lazy" />
+              <img src="assets/resume-pages/page-2.png" alt="Zhenyuan Pan resume page 2" width="1638" height="2316" loading="lazy" decoding="async" />
             </article>
           </div>
         </div>
@@ -523,13 +530,13 @@
         <p class="s5-open">Open to research assistant, pre-doc, finance research, and data-driven economics opportunities.</p>
         <div class="contact-links">
           <a href="mailto:s230001081@mail.uic.edu.cn"><span>Email</span><b>s230001081@mail.uic.edu.cn</b></a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noopener"><span>LinkedIn</span><b>Profile</b></a>
-          <a href="https://github.com/" target="_blank" rel="noopener"><span>GitHub</span><b>Projects</b></a>
-          <a href="#" target="_blank" rel="noopener"><span>Research Portfolio</span><b>Archive</b></a>
+          <div class="contact-item is-muted" aria-disabled="true"><span>LinkedIn</span><b>Available on request</b></div>
+          <a href="https://github.com/ZhenyuanPAN822" target="_blank" rel="noopener"><span>GitHub</span><b>ZhenyuanPAN822</b></a>
+          <div class="contact-item is-muted" aria-disabled="true"><span>Research Portfolio</span><b>Coming soon</b></div>
           <a href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener"><span>Resume PDF</span><b>Open file</b></a>
         </div>
         <div class="contact-actions">
-          <a href="assets/ZhenyuanPan_Resume.pdf" download>Download Resume</a>
+          <a id="s5-download-resume" href="assets/ZhenyuanPan_Resume.pdf" download>Download Resume</a>
           <button type="button" id="s5-print-resume">Print Resume</button>
         </div>
       </aside>

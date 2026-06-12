@@ -93,20 +93,21 @@ assets/ZhenyuanPan_Resume.pdf
 
 If the resume PDF changes later, replace the PDF and regenerate the preview PNG pages with the same filenames.
 
-## Links To Update Before Publishing
+## Contact Link Status
 
-These are currently placeholders and should be replaced with final URLs if available:
+The public page currently uses:
 
 ```text
-LinkedIn: https://www.linkedin.com/
-GitHub: https://github.com/
-Research Portfolio: #
+Email: s230001081@mail.uic.edu.cn
+GitHub: https://github.com/ZhenyuanPAN822
+Resume PDF: assets/ZhenyuanPan_Resume.pdf
 ```
 
-The email currently used in the page:
+These are intentionally shown as non-clickable status rows until final URLs are available:
 
 ```text
-s230001081@mail.uic.edu.cn
+LinkedIn: Available on request
+Research Portfolio: Coming soon
 ```
 
 ## Deployment Notes
@@ -116,4 +117,3 @@ s230001081@mail.uic.edu.cn
 - The production server should serve `index.html` as the main entry.
 - No Node/Vite/React build is needed.
 - The previous development tweak panel and React/Babel debug scripts are not included in this release package.
-

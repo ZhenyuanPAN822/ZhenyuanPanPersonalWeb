@@ -1,17 +1,19 @@
-/* transition.js — one unbroken camera move across three screens.
+/* transition.js - one unbroken camera move across five screens.
    Scrolling sets a target; a damped follower (curScroll) chases it, so jumpy
-   wheel input becomes one smooth cinematic motion. Two phases derive from the
+   wheel input becomes one smooth cinematic motion. Four phases derive from the
    smoothed scroll:
-     p (0→1)  S1 living hero chart  →  S2 Equity & Quant Terminal
+     p (0->1)  S1 living hero chart -> S2 Equity & Quant Terminal
               (chart shrinks into the terminal's center panel and freezes)
-     q (0→1)  S2 terminal → S3 Research Console, staged as a camera dolly:
-              q 0→.5  PUSH IN — terminal panels part outward & fade as the
+     q (0->1)  S2 terminal -> S3 Research Console, staged as a camera dolly:
+              q 0-.5  PUSH IN - terminal panels part outward & fade as the
                       camera dives back into the chart; it expands to full
                       screen again, candles dissolving into a bare data grid
-              q .5→1  PULL OUT — the grid lands inside the Research Console's
+              q .5-1  PULL OUT - the grid lands inside the Research Console's
                       event-study panel; research panels glide in around it
+     r (0->1)  S3 pulls back into the Screen 4 workspace monitor.
+     s (0->1)  Screen 4 lifts and blurs while the glass Resume Archive rises in.
    The graph paper never cuts: the same canvas grid is the connective tissue
-   from market chart → full-screen data field → econometrics plot. */
+   from market chart -> full-screen data field -> econometrics plot. */
 (function () {
   "use strict";
 
@@ -35,8 +37,8 @@
   const R_START = 3.5;  // dwell on the research console, then S3→S4 begins
   const R_LEN = 1.1;    // S3→S4 pull-back span
 
-  const S_START = 4.78; // dwell on the workspace, then S4 -> S5 begins
-  const S_LEN = 1.22;   // S4 -> S5 resume archive span
+  const S_START = 4.78; // dwell on the workspace, then slide/blur into S5
+  const S_LEN = 1.22;   // S4 -> S5 glass archive reveal span
 
   let rectA = hostS2.getBoundingClientRect();
   let rectC = hostS3 ? hostS3.getBoundingClientRect() : rectA;

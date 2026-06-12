@@ -20,31 +20,11 @@
   const printB = document.getElementById("s5-print-resume");
   const fullscreen = document.getElementById("rv-fullscreen");
 
-  const DESK_DOC = { left: 405, top: 638, width: 230, height: 116 };
   let zoom = 1;
 
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const win = (t, a, b) => ease(clamp01((t - a) / (b - a)));
-
-  function fallbackDeskRect() {
-    const vw = window.innerWidth, vh = window.innerHeight;
-    return { left: vw * 0.29, top: vh * 0.68, width: vw * 0.14, height: vh * 0.12 };
-  }
-
-  function deskRect() {
-    if (window.__room3d && typeof window.__room3d.assetRect === "function") {
-      const r = window.__room3d.assetRect(DESK_DOC);
-      if (r && isFinite(r.left) && r.width > 1) return r;
-    }
-    return fallbackDeskRect();
-  }
-
-  function viewerRect() {
-    if (!viewer) return { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-    const r = viewer.getBoundingClientRect();
-    return { left: r.left, top: r.top, width: r.width, height: r.height };
-  }
 
   function setOpacityTransform(el, opacity, y, scale) {
     if (!el) return;
@@ -110,7 +90,6 @@
   });
 
   window.addEventListener("resize", () => {
-    updatePortal(window.__resumeProgress || 0);
     updatePageStatus();
   });
 
@@ -121,8 +100,5 @@
       window.__resumeProgress = clamp01(t);
       setProgress(window.__resumeProgress);
     },
-    deskRect,
-    viewerRect,
-    bookRect: viewerRect,
   };
 })();
