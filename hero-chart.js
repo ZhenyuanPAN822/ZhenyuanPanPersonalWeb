@@ -44,9 +44,9 @@
   function nextCandle() {
     const baseVol = 0.42;
     // momentum that mean-reverts -> trends then pulls back (realistic waves)
-    velocity += (Math.random() - 0.5) * 0.26;
-    velocity *= 0.9;
-    velocity -= (price - 100) * 0.0016; // gentle pull toward a center band
+    velocity += (Math.random() - 0.5) * 0.22;
+    velocity *= 0.80;
+    velocity -= (price - 100) * 0.0062; // gentle pull toward a center band
     const o = price;
     let c = o + velocity + (Math.random() - 0.5) * baseVol;
     const span = Math.abs(c - o) + baseVol * (0.5 + Math.random());
@@ -112,8 +112,15 @@
     ctx.clearRect(0, 0, W, H);
 
     const padTop = 28, padBot = 26;
-    const top = padTop, ch = H - padTop - padBot;
+    const top = padTop, fullCh = H - padTop - padBot;
+    const detail = Math.max(0, Math.min(1, c.detail == null ? 0 : c.detail));
+    const volH = fullCh * 0.17 * detail;
+    const volGap = volH > 0 ? 12 * detail : 0;
+    const ch = fullCh - volH - volGap;
     chTop = top; chH = ch;
+
+    const volTop = top + ch + volGap, volBot = top + fullCh;
+    let vMax = 1e-6; for (const kk of candles) { if (kk.v > vMax) vMax = kk.v; }
 
     // smooth auto-scale
     const [tMin, tMax] = visibleExtent();
@@ -126,7 +133,7 @@
     const step = niceStep(range, 6);
     const start = Math.ceil(dispMin / step) * step;
     ctx.lineWidth = 1;
-    ctx.font = "11px ui-monospace, 'IBM Plex Mono', SFMono-Regular, Menlo, monospace";
+    ctx.font = "12px 'Times New Roman', Times, Georgia, serif";
     ctx.textBaseline = "middle";
     for (let p = start; p <= dispMax; p += step) {
       const y = yOf(p);
@@ -187,6 +194,29 @@
       ctx.fillStyle = col;
 
       const cx = x;
+      if (detail > 0.02 && c.footprint !== false) {
+        // order-flow "footprint": volume-at-price heat inside the candle range,
+        // split bid (left) / ask (right). Settled view only; under the body.
+        const yH = yOf(k.h), yL = yOf(k.l), colH = yL - yH;
+        const cells = 7, cellH = colH / cells, span = Math.abs(k.h - k.l) + 1e-6;
+        for (let q = 0; q < cells; q++) {
+          const tt = (q + 0.5) / cells;
+          const level = k.h + (k.l - k.h) * tt;
+          const d1 = (level - k.c) / span, d2 = (level - k.o) / span;
+          let inten = Math.exp(-d1 * d1 * 7) * 0.85 + Math.exp(-d2 * d2 * 10) * 0.45;
+          if (inten > 1) inten = 1;
+          const cy = yH + colH * tt - cellH / 2 + 0.5;
+          const hh = Math.max(1.3, cellH - 1.4);
+          ctx.globalAlpha = a * detail * inten * 0.20;
+          ctx.fillStyle = c.downColor;
+          ctx.fillRect(Math.round(cx - bodyW), cy, bodyW - 1, hh);
+          ctx.globalAlpha = a * detail * inten * 0.24;
+          ctx.fillStyle = c.upColor;
+          ctx.fillRect(Math.round(cx + 1), cy, bodyW - 1, hh);
+        }
+        ctx.globalAlpha = a * c.candleOpacity;
+        ctx.strokeStyle = col; ctx.fillStyle = col;
+      }
       // wick
       ctx.lineWidth = 1.3;
       ctx.beginPath();
@@ -200,6 +230,26 @@
     }
     ctx.globalAlpha = 1;
 
+    // volume sub-panel (settled view): up/down histogram under the price band
+    if (detail > 0.02) {
+      ctx.globalAlpha = detail * 0.45; ctx.lineWidth = 1;
+      ctx.strokeStyle = c.gridColor;
+      ctx.beginPath(); ctx.moveTo(0, volBot + 0.5); ctx.lineTo(W, volBot + 0.5); ctx.stroke();
+      for (let i = 0; i < candles.length; i++) {
+        const k = candles[i];
+        const x = i * slotW - scroll;
+        if (x < -slotW || x > W + slotW) continue;
+        const a = edgeAlpha(x);
+        if (a <= 0) continue;
+        const up = k.c >= k.o;
+        const barH = Math.max(0.6, (k.v / vMax) * volH);
+        ctx.globalAlpha = a * detail * 0.5;
+        ctx.fillStyle = up ? c.upColor : c.downColor;
+        ctx.fillRect(Math.round(x - bodyW / 2), volBot - barH, bodyW, barH);
+      }
+      ctx.globalAlpha = 1;
+    }
+
     // last-price tag on the right edge (live feel)
     const last = candles[candles.length - 3]; // last fully on-screen-ish
     if (last) {
@@ -209,7 +259,7 @@
       const col = up ? c.upColor : c.downColor;
       const y = yOf(last.c);
       const label = last.c.toFixed(2);
-      ctx.font = "11px ui-monospace, 'IBM Plex Mono', SFMono-Regular, Menlo, monospace";
+      ctx.font = "12px 'Times New Roman', Times, Georgia, serif";
       const tw = ctx.measureText(label).width;
       const bw = tw + 16, bh = 18, bx = W - bw - 6;
       ctx.globalAlpha = 0.9;
@@ -237,10 +287,12 @@
   // window stops them from double-drawing when both are live.
   let lastT = performance.now();
   let lastTickAt = 0;
+  let onScreen = true;   // paused when the hero scrolls fully out of view (perf)
 
   function tick() {
     const now = performance.now();
     if (now - lastTickAt < 8) return;       // dedupe overlapping drivers
+    if (!onScreen && !window.__caseOpen) { lastT = now; lastTickAt = now; return; }  // skip redraw off-screen
     let dt = (now - lastT) / 1000;
     lastT = now; lastTickAt = now;
     if (dt > 0.05) dt = 0.016;              // clamp tab-switch / first-frame jumps
@@ -273,6 +325,11 @@
     seed();
     resize();
     startLoop();
+    var heroSec = document.getElementById("exp-intro");
+    if (heroSec && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) lastT = performance.now(); }, { threshold: 0 });
+      io.observe(heroSec);
+    }
   }
   let rT;
   window.addEventListener("resize", () => {

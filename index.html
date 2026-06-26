@@ -1,28 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Zhenyuan Pan — Research Terminal</title>
-<meta name="description" content="Personal website of Zhenyuan Pan, an economics research and finance-focused portfolio with market, research, methods, resume, and contact sections." />
-<meta name="theme-color" content="#f6f7f9" />
+<title>Zhenyuan Pan · Personal Website</title>
+<meta name="description" content="Personal website of Zhenyuan Pan. Economics, empirical finance, and applied econometrics. Internship experience, presented as visual editorial." />
+<meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Zhenyuan Pan — Research Terminal" />
-<meta property="og:description" content="Economics, finance research, data workflows, resume archive, and contact points for Zhenyuan Pan." />
-<meta property="og:image" content="assets/s4-workspace-clean.png" />
-<meta name="twitter:card" content="summary_large_image" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f6f7f9'/%3E%3Cpath d='M8 21h16M10 18l4-4 3 3 5-7' fill='none' stroke='%232f5fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<meta property="og:title" content="Zhenyuan Pan · Personal Website" />
+<meta property="og:description" content="Economics, empirical finance, applied econometrics, and an editorial record of internship experience." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ffffff'/%3E%3Cpath d='M8 21h16M10 18l4-4 3 3 5-7' fill='none' stroke='%232f5fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Spectral:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="terminal.css" />
-<link rel="stylesheet" href="research.css" />
-<link rel="stylesheet" href="room.css" />
-<link rel="stylesheet" href="iso-room.css" />
-<link rel="stylesheet" href="resume.css" />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="experience.css" />
+<link rel="stylesheet" href="case-study.css" />
 <style>
   :root {
-    --bg: #f6f7f9;
+    --bg: #ffffff;
     --ink: #1b2230;
     --ink-soft: #44505f;
     --ink-mute: #79828f;
@@ -30,60 +25,45 @@
     --down: #b06a63;
     --hair: rgba(28, 36, 52, 0.12);
     --name-font: 'Source Serif 4', Georgia, serif;
-    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --mono: 'Times New Roman', Times, Georgia, serif;
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; }
+  html, body { margin: 0; }
   body {
     background: var(--bg);
     color: var(--ink);
     font-family: var(--name-font);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
   }
 
-  /* ── Full-screen hero ───────────────────────────────────────────── */
-  .hero {
-    position: fixed;
+  /* ── Hero layer (lives inside the pinned stage; cross-fades out) ─────────── */
+  .stage-hero {
+    position: absolute;
     inset: 0;
-    overflow: hidden;
+    z-index: 4;
+    will-change: opacity, transform;
   }
 
-  /* Chart layer — kept as a self-contained fixed stage so a later one-shot
-     scroll can scale/translate it down into a TradingView-style panel. */
-  .chart-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    transform-origin: center center;
-    will-change: transform;
-  }
-  #hero-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Soft white veil so the centred text stays highly readable */
+  /* Soft white veil so the centred text stays highly readable over the chart */
   .veil {
-    position: fixed;
+    position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
     background:
       radial-gradient(ellipse 46% 42% at 50% 50%,
-        rgba(246, 247, 249, 0.94) 0%,
-        rgba(246, 247, 249, 0.80) 38%,
-        rgba(246, 247, 249, 0.0) 72%);
+        rgba(255, 255, 255, 0.94) 0%,
+        rgba(255, 255, 255, 0.80) 38%,
+        rgba(255, 255, 255, 0.0) 72%);
     -webkit-backdrop-filter: blur(3.5px);
     backdrop-filter: blur(3.5px);
     -webkit-mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, #000 30%, transparent 70%);
     mask-image: radial-gradient(ellipse 52% 46% at 50% 50%, #000 30%, transparent 70%);
   }
 
-  /* ── Centred content ────────────────────────────────────────────── */
+  /* ── Centred content ────────────────────────────────────────────────────── */
   .content {
     position: relative;
     z-index: 3;
@@ -95,6 +75,7 @@
     text-align: center;
     padding: 6vh 7vw;
     gap: 0;
+    will-change: transform;
   }
   .name {
     font-family: var(--name-font);
@@ -112,36 +93,36 @@
     background: var(--hair);
     margin: clamp(18px, 2.6vh, 30px) 0 clamp(16px, 2.4vh, 26px);
   }
+  .degrees {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(9px, 1.6vh, 15px);
+  }
   .degree {
     font-family: var(--name-font);
     font-weight: 400;
-    font-size: clamp(17px, 2.05vw, 23px);
+    font-size: clamp(19px, 2.3vw, 26px);
     color: var(--ink-soft);
     letter-spacing: 0.005em;
     margin: 0;
     white-space: nowrap;
   }
-  .meta {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-top: clamp(18px, 2.6vh, 28px);
-  }
-  .meta span {
+  .focus {
     font-family: var(--mono);
     font-weight: 400;
-    font-size: clamp(10.5px, 1.05vw, 12.5px);
-    letter-spacing: 0.2em;
+    font-size: clamp(12px, 1.35vw, 14px);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--ink-mute);
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 92%;
+    margin: clamp(28px, 4.4vh, 48px) 0 0;
   }
 
   /* ── Research-terminal chrome (peripheral, low key) ─────────────── */
-  .chrome { transition: opacity 0.4s ease; }
-  body[data-chrome="off"] .chrome { opacity: 0; pointer-events: none; }
-
   .chrome .edge {
-    position: fixed;
+    position: absolute;
     z-index: 4;
     font-family: var(--mono);
     font-size: 11px;
@@ -175,7 +156,7 @@
   .tick-delta.down { color: var(--down); }
 
   /* corner crop marks — figure framing */
-  .crop { position: fixed; z-index: 4; width: 14px; height: 14px; border-color: var(--hair); border-style: solid; border-width: 0; }
+  .crop { position: absolute; z-index: 4; width: 14px; height: 14px; border-color: var(--hair); border-style: solid; border-width: 0; }
   .crop.c1 { top: 16px; left: 16px; border-top-width: 1px; border-left-width: 1px; }
   .crop.c2 { top: 16px; right: 16px; border-top-width: 1px; border-right-width: 1px; }
   .crop.c3 { bottom: 16px; left: 16px; border-bottom-width: 1px; border-left-width: 1px; }
@@ -183,7 +164,7 @@
 
   /* scroll hint (foreshadows the second screen) */
   .scroll-hint {
-    position: fixed;
+    position: absolute;
     z-index: 4;
     left: 50%;
     bottom: 22px;
@@ -219,375 +200,432 @@
   @media (prefers-reduced-motion: reduce) {
     .dot, .chev { animation: none; }
   }
-
 </style>
 </head>
 <body data-chrome="on">
-  <main class="hero" data-screen-label="Hero">
-    <!-- Chart layer: morphs (scale + clip) from full-screen into the
-         Screen 2 center panel during the one-shot scroll. -->
-    <div class="chart-clip" id="chart-clip">
-      <div class="chart-pan" id="chart-pan">
-        <canvas id="hero-canvas"></canvas>
+  <nav class="topnav" aria-label="Primary">
+    <div class="topnav-inner">
+      <a class="tn-brand" href="#" data-go="home"><span class="tn-mark" aria-hidden="true"></span>Zhenyuan Pan</a>
+      <div class="tn-right">
+        <div class="tn-links">
+          <a href="#" class="tn-link" data-go="home">Home</a>
+          <a href="#" class="tn-link" data-go="internship">Internship</a>
+          <a href="#" class="tn-link" data-go="research">Research</a>
+          <a href="#" class="tn-link" data-go="systems">AI Systems</a>
+          <a href="#" class="tn-link" data-go="markets">Markets</a>
+        </div>
+        <span class="tn-div" aria-hidden="true"></span>
+        <a href="#" class="tn-cta" data-go="resume">Resume</a>
       </div>
     </div>
+  </nav>
+  <main class="exp" id="exp">
 
-    <div class="veil"></div>
+    <!-- ════════ TRANSITION ZONE — one pinned stage ════════
+         The stage stays pinned (position: sticky) while the page scrolls
+         through it. Scroll progress (0→1) continuously: morphs the single,
+         never-reloaded K-line from full-screen into the Screen-2 chart module;
+         fades and lifts the hero text; and reveals the Screen-2 headline + first
+         internship in place. Nothing slides up to cover anything — the same
+         scene is re-composed. After progress 1 the stage unpins and the rest of
+         Screen 2 scrolls normally. -->
+    <section class="exp-intro" id="exp-intro">
+      <div class="exp-stage" id="exp-stage">
 
-    <section class="content">
-      <h1 class="name">Zhenyuan Pan</h1>
-      <div class="rule"></div>
-      <p class="degree">M.A. Economics Candidate at NYU</p>
-      <div class="meta">
-        <span>BNU-HKBU UIC · Applied Economics</span>
-        <span>Finance · Markets · Quant Research · Economic Modeling</span>
+        <!-- the single persistent K-line (full-stage; morphed via transform+clip) -->
+        <div class="kline-wrap" id="chart-clip">
+          <div class="chart-pan" id="chart-pan">
+            <canvas id="hero-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- HERO layer (Screen 1) — cross-fades out as the morph proceeds -->
+        <div class="stage-hero" id="stage-hero" data-screen-label="Hero">
+          <div class="veil"></div>
+          <section class="content">
+            <h1 class="name">Zhenyuan Pan</h1>
+            <div class="rule"></div>
+            <div class="degrees">
+              <p class="degree">M.A. in Economics · New York University · 2026</p>
+              <p class="degree">B.B.A. (Honours) in Applied Economics · Hong Kong Baptist University</p>
+            </div>
+            <p class="focus">Empirical finance · applied econometrics · equity market, risk &amp; policy research</p>
+          </section>
+          <div class="chrome">
+            <div class="crop c1"></div><div class="crop c2"></div>
+            <div class="crop c3"></div><div class="crop c4"></div>
+            <div class="edge tl"><span class="dot"></span><span>Zhenyuan Pan · Personal Website</span></div>
+            <div class="edge tr">
+              <span class="clock-utc dim" id="clock-utc">UTC 00:00:00</span>
+              <span class="clock-local" id="clock-local">00:00:00</span>
+            </div>
+            <div class="edge bl">
+              <span>ZPX:IDX · Daily</span>
+              <span class="tick-price" id="tick-price">--</span>
+              <span class="tick-delta up" id="tick-delta">▲ 0.00</span>
+            </div>
+            <div class="edge br dim">Fig. 01 · Market Overview</div>
+            <div class="scroll-hint"><span>Scroll</span><span class="chev"></span></div>
+          </div>
+        </div>
+
+        <!-- SETTLED Screen-2 layer — headline + first internship, revealed in place -->
+        <div class="stage-s2" id="stage-s2" data-screen-label="Internship Experience">
+          <div class="exp-wrap">
+            <header class="exp-head">
+              <div class="exp-kicker">Professional experience</div>
+              <h2 class="exp-title">Internship Experience</h2>
+            </header>
+            <div id="block-lead"></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- Terminal chrome -->
-    <div class="chrome">
-      <div class="crop c1"></div><div class="crop c2"></div>
-      <div class="crop c3"></div><div class="crop c4"></div>
+    <!-- ════════ REST OF SCREEN 2 — normal scroll ════════ -->
+    <section class="exp-rest" id="exp-rest">
+      <div class="exp-wrap">
+        <div class="exp-blocks" id="exp-blocks"></div>
+      </div>
+    </section>
 
-      <div class="edge tl">
-        <span class="dot"></span>
-        <span>ZP · Research Terminal</span>
-      </div>
-      <div class="edge tr">
-        <span class="clock-utc dim" id="clock-utc">UTC 00:00:00</span>
-        <span class="clock-local" id="clock-local">00:00:00</span>
-      </div>
-      <div class="edge bl">
-        <span>ZPX:IDX · Daily</span>
-        <span class="tick-price" id="tick-price">—</span>
-        <span class="tick-delta up" id="tick-delta">▲ 0.00</span>
-      </div>
-      <div class="edge br dim">Fig. 01 — Market Overview</div>
+    <!-- ════════ SCREEN 3 — Research Experience (USAFacts "Featured Projects" cards) ════════ -->
+    <section class="research" id="research" data-screen-label="Research Experience">
+      <div class="exp-wrap">
+        <div class="rx-head">
+          <div class="rx-eyebrow">Selected Work</div>
+          <h2 class="rx-title">Research Experience</h2>
+        </div>
+        <div class="rx-grid">
 
-      <div class="scroll-hint">
-        <span>Scroll</span>
-        <span class="chev"></span>
+          <article class="rx-card c1" tabindex="0" data-case="redsea" data-screen-label="Red Sea Disruption">
+            <svg class="rx-wave rx-wave-b" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,175 C120,115 280,235 400,160 L400,300 L0,300 Z"/></svg>
+            <svg class="rx-wave" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,150 C110,80 290,210 400,130 L400,300 L0,300 Z"/></svg>
+            <svg class="rx-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <path d="M32 8 V44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="32" cy="13" r="5" stroke="currentColor" stroke-width="3"/>
+              <path d="M16 30 H48" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <path d="M14 30 C14 44 22 52 32 52 C42 52 50 44 50 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <path d="M10 50 C16 56 22 50 28 56 M36 56 C42 50 48 56 54 50" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <div class="rx-body">
+              <div class="rx-cat">Maritime Economics</div>
+              <h3 class="rx-ctitle">Port Adjustment to Maritime Chokepoint Disruption: Evidence from the Red Sea Shipping Crisis</h3>
+              <p class="rx-dek">Continuous-intensity DiD and DDD estimates trace how rerouting exposure reshaped port calls, imports, and exports across shipping corridors, separating geographic exposure from network connectivity in a 175-port event-study panel.</p>
+            </div>
+            <span class="rx-arrow" aria-hidden="true">→</span>
+          </article>
+
+          <article class="rx-card c2" tabindex="0" data-case="ailabor" data-screen-label="AI and the Labor Market">
+            <div class="rx-affil">RA to Prof. Hongru Tan</div>
+            <svg class="rx-wave" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,130 C120,200 280,70 400,150 L400,300 L0,300 Z"/></svg>
+            <svg class="rx-icon rx-icon-match" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <path class="rx-match" d="M14 18 H50 M14 46 H50 M14 21 L50 43 M14 43 L50 21" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="14" cy="18" r="5" stroke="currentColor" stroke-width="3" fill="#2148d6"/>
+              <circle cx="14" cy="46" r="5" stroke="currentColor" stroke-width="3" fill="#2148d6"/>
+              <circle cx="50" cy="18" r="5" stroke="currentColor" stroke-width="3" fill="#2148d6"/>
+              <circle cx="50" cy="46" r="5" stroke="currentColor" stroke-width="3" fill="#2148d6"/>
+            </svg>
+            <div class="rx-body">
+              <div class="rx-cat">Macro-Labor Theory</div>
+              <h3 class="rx-ctitle">AI, Creative Labor Substitution, and Structural Unemployment in a DSGE-DMP Growth Model</h3>
+              <p class="rx-dek">A closed general-equilibrium framework derives how AI-driven task substitution, technology accumulation, new-task creation, and skill mismatch jointly shape job value, vacancy creation, matching, and structural unemployment.</p>
+            </div>
+            <span class="rx-arrow" aria-hidden="true">→</span>
+          </article>
+
+          <article class="rx-card c3" tabindex="0" data-case="socialcapital" data-screen-label="Social Capital Formation in Tutoring Networks">
+            <div class="rx-affil">RA to Prof. Hongru Tan</div>
+            <svg class="rx-wave" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M0,140 C100,90 300,200 400,110 L400,300 L0,300 Z"/></svg>
+            <svg class="rx-icon" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <circle cx="20" cy="22" r="6" stroke="currentColor" stroke-width="3"/>
+              <circle cx="44" cy="22" r="6" stroke="currentColor" stroke-width="3"/>
+              <circle cx="32" cy="44" r="6" stroke="currentColor" stroke-width="3"/>
+              <path d="M24 27 L28 39 M40 27 L36 39 M26 22 H38" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            <div class="rx-body">
+              <div class="rx-cat">Behavioral Economics · RCT-DiD</div>
+              <h3 class="rx-ctitle">Social Capital Formation in Tutoring Networks</h3>
+              <p class="rx-dek">Designed an RCT-DiD field study using trust and public-goods games to measure how repeated tutoring participation shapes trust, reciprocity, and cooperation among university volunteers, built on a software-copyrighted education platform that turns matching, service logs, and supervision into structured field data.</p>
+            </div>
+            <span class="rx-arrow" aria-hidden="true">→</span>
+          </article>
+
+        </div>
+
+        <!-- course-paper tiles (USAFacts "More from The Viz Lab" style; no heading, follows the three cards) -->
+        <div class="vl-grid">
+          <article class="vl-tile" tabindex="0" role="button" data-paper="treasury-risk-triangle" data-screen-label="The Treasury Risk Triangle">
+            <div class="vl-thumb"><img src="papers/treasury-risk-triangle/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Fixed Income · Risk Attribution</div><h3 class="vl-title">The Treasury Risk Triangle</h3></div>
+          </article>
+          <article class="vl-tile" tabindex="0" role="button" data-paper="bonds-stop-hedging-stocks" data-screen-label="Why Did Bonds Stop Hedging Stocks">
+            <div class="vl-thumb"><img src="papers/bonds-stop-hedging-stocks/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Asset Allocation · Macro</div><h3 class="vl-title">Why Did Bonds Stop Hedging Stocks?</h3></div>
+          </article>
+          <article class="vl-tile" tabindex="0" role="button" data-paper="price-of-stagflation-risk" data-screen-label="The Price of Stagflation Risk">
+            <div class="vl-thumb"><img src="papers/price-of-stagflation-risk/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Cross-Asset · Inflation</div><h3 class="vl-title">The Price of Stagflation Risk</h3></div>
+          </article>
+          <article class="vl-tile" tabindex="0" role="button" data-paper="macro-disagreement-industry-rotation" data-screen-label="Macro Disagreement and Industry Rotation">
+            <div class="vl-thumb"><img src="papers/macro-disagreement-industry-rotation/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Equity Asset Pricing</div><h3 class="vl-title">Macro Disagreement and Industry Rotation</h3></div>
+          </article>
+          <article class="vl-tile" tabindex="0" role="button" data-paper="revision-robust-forecasting" data-screen-label="Revision-Robust Real-Time Macroeconomic Forecasting">
+            <div class="vl-thumb"><img src="papers/revision-robust-forecasting/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Real-Time Forecasting</div><h3 class="vl-title">Revision-Robust Real-Time Macroeconomic Forecasting</h3></div>
+          </article>
+          <article class="vl-tile" tabindex="0" role="button" data-paper="denied-mortgage-applicants" data-screen-label="How Risky Are Denied Mortgage Applicants">
+            <div class="vl-thumb"><img src="papers/denied-mortgage-applicants/cover.png" alt="" loading="lazy"></div>
+            <div class="vl-body"><div class="vl-cat">Credit · Partial Identification</div><h3 class="vl-title">How Risky Are Denied Mortgage Applicants?</h3></div>
+          </article>
+        </div>
+
       </div>
-    </div>
+    </section>
+
+    <!-- ════════ SCREEN 4 — Systems (USAFacts "Reports" row-list) ════════ -->
+    <section class="systems" id="systems" data-screen-label="AI Systems">
+      <div class="exp-wrap">
+        <div class="sys-head">
+          <div>
+            <div class="sys-eyebrow">Working with</div>
+            <h2 class="sys-title">AI Systems</h2>
+          </div>
+          <p class="sys-intro">Field notes from a documented top-1% ChatGPT user on turning frontier models into research, coding, product, and quant workflows. Built from daily AI use since ChatGPT&rsquo;s first release, with harnesses that ship work instead of only answering questions.</p>
+        </div>
+
+        <div class="sys-list">
+
+          <!-- 01 · credentials / field note -->
+          <article class="sys-row" tabindex="0" data-sys="ai-cycle" data-screen-label="A Front-Row Seat to the AI Cycle">
+            <div class="sys-text">
+              <div class="sys-rk">Field Note</div>
+              <h3 class="sys-rt">A Front-Row Seat to the AI Cycle</h3>
+              <p class="sys-rd">A personal field note from daily AI use since ChatGPT&rsquo;s first public release in November 2022, including top-1% message volume in 2025 ChatGPT stats. Focused on what different models are good at, where they fail, and how they become useful inside real workflows.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">ChatGPT</span><span class="sys-tag">Claude</span><span class="sys-tag">Claude Code</span><span class="sys-tag">Cursor</span><span class="sys-tag">Codex</span><span class="sys-tag">Gemini</span><span class="sys-tag">Obsidian</span><span class="sys-tag">Seedance</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V64 C150,92 60,52 0,82 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,120 C46,86 150,150 200,104 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><path d="M3 32 C16 15 48 15 61 32 C48 49 16 49 3 32 Z"/><circle cx="32" cy="32" r="8.5"/></svg>
+            </div>
+          </article>
+
+          <!-- 02 · research paper harness -->
+          <article class="sys-row" tabindex="0" data-sys="paper-harness" data-screen-label="The Research Paper Factory">
+            <div class="sys-text">
+              <div class="sys-rk">Harness &middot; Workflow</div>
+              <h3 class="sys-rt">The Research Paper Factory: A Harness-Driven Workflow</h3>
+              <p class="sys-rd">A local-to-cloud research pipeline that moves empirical questions through topic gates, literature maps, theory memos, PAP specifications, executable code, result audits, and manuscript assembly.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">Claude Code</span><span class="sys-tag">ChatGPT Pro</span><span class="sys-tag">Playwright</span><span class="sys-tag">Gates</span><span class="sys-tag">PAP</span><span class="sys-tag">Pipeline</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V58 C140,88 70,48 0,76 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,138 C60,108 130,168 200,124 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="8" width="28" height="40" rx="3"/><path d="M20 20 H34 M20 28 H34 M20 36 H30"/><path d="M50 36 V56 M44 50 L50 56 L56 50"/></svg>
+            </div>
+          </article>
+
+          <!-- 03 · PM product harness -->
+          <article class="sys-row" tabindex="0" data-sys="pm-harness" data-screen-label="The Internet Product Factory">
+            <div class="sys-text">
+              <div class="sys-rk">Harness &middot; Workflow</div>
+              <h3 class="sys-rt">The Internet Product Factory: A Harness-Driven Workflow</h3>
+              <p class="sys-rd">A markdown-driven product factory that turns demand signals into public GitHub products through evidence packs, Q-Gates, MVP specs, build logs, multi-agent audits, and launch packages.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">Claude Code</span><span class="sys-tag">ChatGPT Pro</span><span class="sys-tag">Evidence Packs</span><span class="sys-tag">Q-Gate</span><span class="sys-tag">GitHub Launch</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V66 C150,94 70,54 0,84 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,126 C50,96 140,156 200,112 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="12" width="52" height="40" rx="4"/><path d="M6 23 H58"/><circle class="fill" cx="12" cy="17.5" r="1.7"/><rect x="13" y="30" width="14" height="15"/><rect x="33" y="30" width="14" height="15"/></svg>
+            </div>
+          </article>
+
+          <!-- 04 · quant research harness -->
+          <article class="sys-row" tabindex="0" data-sys="quant-harness" data-screen-label="The Quant Factor-Mining Harness">
+            <div class="sys-text">
+              <div class="sys-rk">Harness</div>
+              <h3 class="sys-rt">The Quant Factor-Mining Harness</h3>
+              <p class="sys-rd">A design-first QR workflow that turns market observations into falsifiable factor theses, executable gates, locked research contracts, backtests, benchmark audits, and portfolio-level validation.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">A-shares</span><span class="sys-tag">Factor Research</span><span class="sys-tag">Design Gates</span><span class="sys-tag">Contract Lock</span><span class="sys-tag">Backtest Audit</span><span class="sys-tag">Memory Loop</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V60 C140,90 70,50 0,78 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,132 C60,102 130,162 200,118 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="10" width="13" height="13"/><rect class="fill" x="27" y="10" width="13" height="13"/><rect x="44" y="10" width="13" height="13"/><rect x="10" y="27" width="13" height="13"/><rect x="27" y="27" width="13" height="13"/><rect class="fill" x="44" y="27" width="13" height="13"/><rect class="fill" x="10" y="44" width="13" height="13"/><rect x="27" y="44" width="13" height="13"/><rect x="44" y="44" width="13" height="13"/></svg>
+            </div>
+          </article>
+
+          <!-- 05 · repository example one (placeholder) -->
+          <article class="sys-row" tabindex="0" data-sys="decision-engine" data-screen-label="AI Decision Engine">
+            <div class="sys-text">
+              <div class="sys-rk">GitHub Project</div>
+              <h3 class="sys-rt">AI Decision Engine</h3>
+              <p class="sys-rd">An 8-agent decision workflow where LLMs structure the problem, users review the assumptions, and a deterministic Python simulator computes utility distributions, rankings, and sensitivity tests.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">Python</span><span class="sys-tag">LLM Agents</span><span class="sys-tag">Monte Carlo</span><span class="sys-tag">Decision Analysis</span><span class="sys-tag">Local First</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V62 C150,90 70,50 0,80 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,128 C50,98 140,158 200,114 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8 L32 30"/><circle cx="32" cy="36" r="6"/><path d="M14 20 L32 30 L50 20"/><path d="M14 20 V44 L32 56 L50 44 V20"/></svg>
+            </div>
+          </article>
+
+          <!-- 06 · repository example two (placeholder) -->
+          <article class="sys-row" tabindex="0" data-sys="rcl" data-screen-label="Relationship Candlestick Lab">
+            <div class="sys-text">
+              <div class="sys-rk">GitHub Project</div>
+              <h3 class="sys-rt">Relationship Candlestick Lab</h3>
+              <p class="sys-rd">A chat-to-chart AI project that turns private conversations into relationship K-lines, combining LLM-based relative scoring with local OHLC aggregation. Shared on Xiaohongshu with 16.2K views, 727 likes, 641 saves, and 1,145 shares.</p>
+              <div class="sys-rmeta">
+                <span class="sys-tag">LLM Scoring</span><span class="sys-tag">K-Line Visualization</span><span class="sys-tag">FastAPI</span><span class="sys-tag">Xiaohongshu Proof</span>
+              </div>
+            </div>
+            <div class="sys-icon">
+              <svg class="sys-blob" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H200 V58 C140,88 70,48 0,76 Z" fill="rgba(255,255,255,0.42)"/><path d="M0,136 C60,106 130,166 200,122 L200,200 L0,200 Z" fill="#d6006c"/></svg>
+              <svg class="sys-gly" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 8 V56 M32 8 V56 M48 8 V56"/><rect class="fill" x="12" y="22" width="8" height="20"/><rect class="fill" x="28" y="14" width="8" height="26"/><rect class="fill" x="44" y="30" width="8" height="16"/></svg>
+            </div>
+          </article>
+
+          <!-- (Markets section will follow below the AI Systems rows) -->
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════ SCREEN 5 — Markets & Quant (USAFacts economy "Data guides" + distribution) ════════ -->
+    <section class="markets" id="markets" data-screen-label="Markets and Quant">
+      <div class="exp-wrap">
+        <div class="mq-head">
+          <div>
+            <div class="mq-eyebrow">Markets &amp; Quant</div>
+            <h2 class="mq-title">Markets &amp; Quant</h2>
+          </div>
+        </div>
+
+        <!-- two large data-guide cards: green = investment views, blue = competitions -->
+        <div class="mq-guides">
+          <article class="mq-guide green" tabindex="0" data-mq="views" data-screen-label="Investment Views">
+            <div class="mq-photo" data-slot="views-bg" style="background-image:linear-gradient(to top,rgba(10,30,22,0.34),rgba(10,30,22,0) 52%),url('assets/markets/views-bg.jpg');background-position:center 32%"></div>
+            <div class="mq-panel">
+              <div class="mq-cat">Investment Views</div>
+              <h3 class="mq-gtitle">Investment Views</h3>
+              <p class="mq-gdesc">A running record of my market views and theses, the reasoning behind each call, and how the positions actually played out.</p>
+              <span class="mq-arrow" aria-hidden="true">&#8594;</span>
+            </div>
+          </article>
+          <article class="mq-guide blue" tabindex="0" data-mq="competitions" data-screen-label="Competition Results">
+            <div class="mq-photo" data-slot="competitions-bg" style="background-image:linear-gradient(to top,rgba(8,20,60,0.34),rgba(8,20,60,0) 52%),url('assets/markets/competitions-bg.jpg')"></div>
+            <div class="mq-panel">
+              <div class="mq-cat">Competitions</div>
+              <h3 class="mq-gtitle">Trading &amp; Quant Competitions</h3>
+              <span class="mq-arrow" aria-hidden="true">&#8594;</span>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════ SCREEN 6 — Resume (native browser PDF viewer) ════════ -->
+    <section class="resume" id="resume" data-screen-label="Resume">
+      <div class="exp-wrap">
+        <div class="mq-head">
+          <div>
+            <div class="mq-eyebrow">Resume</div>
+            <h2 class="mq-title">Curriculum Vitae</h2>
+          </div>
+        </div>
+        <div class="cv-frame">
+          <iframe class="cv-pdf" src="assets/ZhenyuanPan_Resume.pdf#view=FitH" title="Zhenyuan Pan resume" loading="lazy"></iframe>
+        </div>
+        <div class="cv-actions">
+          <a class="cv-dl" href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener">Download PDF &#8599;</a>
+        </div>
+        <footer class="exp-foot">
+          <span>Fig. 06 &middot; Resume</span>
+          <span class="dim">Zhenyuan Pan &middot; 2026</span>
+        </footer>
+      </div>
+    </section>
   </main>
 
-  <!-- invisible element that creates scroll length for the one-shot morph -->
-  <div class="scroll-driver"></div>
-
-  <!-- ════════════════ SCREEN 2 — EQUITY & QUANT TERMINAL ════════════════ -->
-  <section class="s2" aria-label="Equity and Quant Terminal" data-screen-label="Terminal">
-    <header class="s2-head">
-      <div class="head-l">
-        <div class="s2-kicker">02 / Markets in Practice</div>
-        <div class="s2-title">Equity &amp; Quant Terminal</div>
-        <p class="s2-desc">Hands-on market experience through internships, strategy research, and live / simulated market practice.</p>
-      </div>
-      <div class="head-r">
-        <div class="sess"><span class="live-dot"></span> Session · Live</div>
-        <div id="s2-clock">UTC 00:00:00</div>
-        <div>ZPX:IDX · Daily</div>
-      </div>
-    </header>
-
-    <div class="s2-body">
-      <!-- LEFT — strategy selector -->
-      <aside class="panel left-panel">
-        <div class="panel-head"><span class="ph-label">Strategies</span><span class="ph-count" id="strat-count"></span></div>
-        <div class="panel-body" id="strat-list"></div>
-        <div class="strat-foot">Select a strategy to project its signals, factors and backtest snapshot onto the chart →</div>
-      </aside>
-
-      <!-- CENTER — chart workstation -->
-      <div class="center">
-        <div class="chart-card">
-          <div class="chart-toolbar">
-            <div class="tb-sym"><span class="sy">ZPX:IDX</span><span class="sn">Equity Index · Daily</span></div>
-            <div class="tb-ohlc" id="tb-ohlc"></div>
-            <div class="tb-spacer"></div>
-            <div class="tf-group">
-              <button class="tf" type="button">1D</button><button class="tf sel" type="button">1W</button><button class="tf" type="button">1M</button><button class="tf" type="button">3M</button><button class="tf" type="button">1Y</button>
-            </div>
-            <div class="tb-tools">
-              <span class="tool" title="Crosshair">＋</span><span class="tool" title="Trendline">╱</span><span class="tool" title="Measure">▱</span><span class="tool" title="Settings">⚙</span>
-            </div>
-          </div>
-          <div class="chart-host" id="chart-host">
-            <div class="ov ov-overlay" id="ov-overlay" style="inset:0">
-              <div class="ov ov-legend" id="ov-legend"></div>
-              <div class="ov-markers" id="ov-markers" style="position:absolute;inset:0"></div>
-              <div class="ov-annots" id="ov-annots" style="position:absolute;inset:0"></div>
-            </div>
-            <div class="ov ov-axis" id="ov-axis"></div>
-            <div class="ov-lasttag" id="ov-lasttag" style="display:none"></div>
-          </div>
-          <div class="vol-wrap">
-            <span class="vol-label">Vol</span>
-            <canvas id="vol-canvas"></canvas>
-          </div>
-        </div>
-        <div class="detail" id="detail"></div>
-      </div>
-
-      <!-- RIGHT — internship experience -->
-      <aside class="panel right-panel">
-        <div class="panel-head"><span class="ph-label">Experience · Internships</span><span class="ph-count" id="intern-count"></span></div>
-        <div class="panel-body scroll" id="intern-list"></div>
-      </aside>
-    </div>
-
-    <footer class="s2-foot">
-      <div class="grp"><span>Fig. 02 — Markets in Practice</span><span class="sig" id="foot-signal"></span></div>
-      <div class="grp"><span id="foot-tick">ZPX:IDX —</span><span>Illustrative · fictional data</span></div>
-    </footer>
-  </section>
-
-  <!-- ════════════════ SCREEN 3 — RESEARCH CONSOLE ════════════════ -->
-  <section class="s3" aria-label="Research Console" data-screen-label="Research">
-    <header class="s2-head s3-head">
-      <div class="head-l">
-        <div class="s2-kicker">03 / Empirical Research</div>
-        <div class="s2-title">Research Console</div>
-        <p class="s2-desc">From market signals to economic shocks — empirical analysis of how real economies absorb disruption.</p>
-      </div>
-      <div class="head-r">
-        <div class="sess"><span class="live-dot"></span> Research · Active</div>
-        <div id="s3-clock">UTC 00:00:00</div>
-        <div id="s3-proj-code">RED-SEA · DID</div>
-      </div>
-    </header>
-
-    <div class="r-body">
-      <!-- LEFT — research project selector (reuses the strategy component) -->
-      <aside class="panel left-panel">
-        <div class="panel-head"><span class="ph-label">Research Projects</span><span class="ph-count" id="proj-count"></span></div>
-        <div class="panel-body" id="proj-list"></div>
-        <div class="proj-foot">Select a project to load its event study, design and findings into the console →</div>
-      </aside>
-
-      <!-- CENTER — research console -->
-      <div class="r-center">
-        <div class="r-main">
-          <div class="r-cardhead">
-            <span class="rc-title" id="es-title">Event Study</span>
-            <span class="rc-sub" id="es-sub">Dynamic treatment effects · 95% CI</span>
-          </div>
-          <div class="r-plot" id="es-plot"></div>
-        </div>
-        <div class="r-lower">
-          <div class="panel">
-            <div class="panel-head"><span class="ph-label" id="corr-label">Global Shipping Network</span></div>
-            <div class="r-plot" id="corr-plot"></div>
-          </div>
-          <div class="panel">
-            <div class="panel-head"><span class="ph-label" id="panel-label">Panel Data Overview</span></div>
-            <div class="panel-body sm-wrap" id="sm-plot"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT — research details -->
-      <aside class="panel right-panel">
-        <div class="panel-head"><span class="ph-label">Project · Details</span><span class="ph-count" id="rdetail-code"></span></div>
-        <div class="panel-body scroll rdetail-body" id="rdetail"></div>
-        <div class="rdetail-foot"><span class="r-viewfull">View full project →</span></div>
-      </aside>
-    </div>
-
-    <!-- bottom metrics strip -->
-    <div class="metrics-strip" id="metrics-strip"></div>
-  </section>
-
-  <!-- ════════════════ SCREEN 4 — METHODS & SYSTEMS CONSOLE ════════════════ -->
-  <section class="s4" aria-label="Methods and Systems Console" data-screen-label="Workspace">
-    <div class="room">
-      <div id="room3d-host"></div>
-
-      <svg id="s4-wires" aria-hidden="true"></svg>
-
-      <aside class="callout co-l" id="co-econ" data-side="r" data-ax="47" data-ay="36">
-        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 13.5h12M3.5 10.5l3-3 2.2 2 3.8-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-        <div class="co-body">
-          <div class="t">Econometrics</div>
-          <div class="d">Causal inference, panel data methods, and robustness frameworks.</div>
-        </div>
-      </aside>
-      <aside class="callout co-l" id="co-pipe" data-side="r" data-ax="39" data-ay="53">
-        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><ellipse cx="8" cy="4" rx="5" ry="2" stroke="currentColor" stroke-width="1.3"></ellipse><path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2" stroke="currentColor" stroke-width="1.3"></path></svg></span>
-        <div class="co-body">
-          <div class="t">Data Pipeline</div>
-          <div class="d">Automated ETL, validation, and versioned datasets at scale.</div>
-        </div>
-      </aside>
-      <aside class="callout co-l" id="co-data" data-side="r" data-ax="42" data-ay="68">
-        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"></circle><path d="M2 8h12M8 2c-1.8 1.8-2.6 3.8-2.6 6S6.2 12.2 8 14c1.8-1.8 2.6-3.8 2.6-6S9.8 3.8 8 2z" stroke="currentColor" stroke-width="1.1"></path></svg></span>
-        <div class="co-body">
-          <div class="t">Financial Data Platforms</div>
-          <div class="d">Bloomberg, FactSet, I/B/E/S, LSEG, Quandl, Haver/IMF, and more.</div>
-        </div>
-      </aside>
-      <aside class="callout co-r" id="co-py" data-side="l" data-ax="66" data-ay="32">
-        <span class="co-icon co-glyph">Py</span>
-        <div class="co-body">
-          <div class="t">Python</div>
-          <div class="d">Data processing, analysis, visualization, and model prototyping.</div>
-        </div>
-      </aside>
-      <aside class="callout co-r" id="co-stata" data-side="l" data-ax="68" data-ay="45">
-        <span class="co-icon co-glyph">St</span>
-        <div class="co-body">
-          <div class="t">STATA</div>
-          <div class="d">Econometric modeling, DID, event studies, and panel estimations.</div>
-        </div>
-      </aside>
-      <aside class="callout co-r" id="co-ai" data-side="l" data-ax="73" data-ay="56">
-        <span class="co-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.2" stroke="currentColor" stroke-width="1.3"></circle><circle cx="8" cy="2.5" r="1.2" fill="currentColor"></circle><circle cx="13.5" cy="8" r="1.2" fill="currentColor"></circle><circle cx="8" cy="13.5" r="1.2" fill="currentColor"></circle><circle cx="2.5" cy="8" r="1.2" fill="currentColor"></circle><path d="M8 4.5v1.3M11.5 8h-1.3M8 11.5v-1.3M4.5 8h1.3" stroke="currentColor" stroke-width="1.1"></path></svg></span>
-        <div class="co-body">
-          <div class="t">AI Workflow</div>
-          <div class="d">LLM-assisted research, code generation, and literature synthesis.</div>
-        </div>
-      </aside>
-      <aside class="callout co-r" id="co-ros" data-side="l" data-ax="66" data-ay="70">
-        <span class="co-icon co-glyph">&gt;_</span>
-        <div class="co-body">
-          <div class="t">Research Operating System</div>
-          <div class="d">Integrated tools, reproducible workflows, and knowledge management.</div>
-        </div>
-      </aside>
-    </div>
-
-    <header class="s4-head">
-      <span class="s2-kicker">04 / Research Operating System</span>
-      <div class="s2-title">Methods &amp; Systems Console</div>
-      <div class="s4-sub">The infrastructure behind insight and impact.</div>
-    </header>
-    <div class="s4-corner">ZP · Workspace</div>
-    <div class="s4-fig">Fig. 04 — Research Operating System</div>
-    <div class="s4-badge"><span>Evidence.</span><span>Methods.</span><span>Impact.</span></div>
-  </section>
-
-  <!-- SCREEN 5 - RESUME ARCHIVE -->
-  <section class="s5" aria-label="Resume Archive" data-screen-label="Resume Archive">
-    <div class="s5-bg" aria-hidden="true"></div>
-
-    <header class="s5-head">
-      <div>
-        <span class="s2-kicker">05 / Resume Archive</span>
-        <h2 class="s5-title">Timeline &amp; Contact</h2>
-        <p class="s5-sub">A compact archive of my academic path, professional experience, and contact points.</p>
-      </div>
-      <div class="s5-status"><span>Archive Ready</span><span>PDF Preview</span></div>
-    </header>
-
-    <div class="s5-layout">
-      <aside class="s5-timeline" aria-label="Resume timeline">
-        <div class="s5-panel-label">Archive Index</div>
-        <ol>
-          <li><time>2026</time><span>NYU M.A. Economics</span></li>
-          <li><time>2025</time><span>Shenzhen International Financial Research Association</span></li>
-          <li><time>2025</time><span>Zhuhai Gaoke Venture Capital</span></li>
-          <li><time>2024</time><span>Yinhua Fund Management</span></li>
-          <li><time>2023</time><span>Sinosafe General Insurance</span></li>
-          <li><time>2023</time><span>Guangdong ZhongAn Law Firm</span></li>
-          <li><time>2022</time><span>BNU-HKBU UIC</span></li>
-        </ol>
-      </aside>
-
-      <section class="resume-viewer" id="resume-viewer" aria-label="Resume PDF viewer">
-        <div class="rv-toolbar">
-          <div class="rv-title">
-            <span class="rv-dot"></span>
-            <div>
-              <strong>Zhenyuan Pan - Resume</strong>
-              <span id="rv-page-status">Page 1 / 2</span>
-            </div>
-          </div>
-          <div class="rv-actions">
-            <button type="button" class="rv-btn" id="rv-zoom-out" aria-label="Zoom out">-</button>
-            <span class="rv-zoom" id="rv-zoom-label">100%</span>
-            <button type="button" class="rv-btn" id="rv-zoom-in" aria-label="Zoom in">+</button>
-          <a class="rv-btn rv-link" id="rv-download-resume" href="assets/ZhenyuanPan_Resume.pdf" download>Download</a>
-            <button type="button" class="rv-btn" id="rv-print">Print</button>
-            <button type="button" class="rv-btn" id="rv-fullscreen">Fullscreen</button>
-            <a class="rv-btn rv-link" href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener">Open</a>
-          </div>
-        </div>
-
-        <div class="rv-scroll" id="rv-scroll" tabindex="0">
-          <div class="rv-pages" id="rv-pages">
-            <article class="rv-page rv-pdf-page" data-page="1">
-              <img src="assets/resume-pages/page-1.png" alt="Zhenyuan Pan resume page 1" width="1638" height="2316" loading="eager" decoding="async" />
-            </article>
-
-            <article class="rv-page rv-pdf-page" data-page="2">
-              <img src="assets/resume-pages/page-2.png" alt="Zhenyuan Pan resume page 2" width="1638" height="2316" loading="lazy" decoding="async" />
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <aside class="s5-contact" aria-label="Contact and links">
-        <div class="s5-panel-label">Contact &amp; Links</div>
-        <p class="s5-open">Open to research assistant, pre-doc, finance research, and data-driven economics opportunities.</p>
-        <div class="contact-links">
-          <a href="mailto:s230001081@mail.uic.edu.cn"><span>Email</span><b>s230001081@mail.uic.edu.cn</b></a>
-          <div class="contact-item is-muted" aria-disabled="true"><span>LinkedIn</span><b>Available on request</b></div>
-          <a href="https://github.com/ZhenyuanPAN822" target="_blank" rel="noopener"><span>GitHub</span><b>ZhenyuanPAN822</b></a>
-          <div class="contact-item is-muted" aria-disabled="true"><span>Research Portfolio</span><b>Coming soon</b></div>
-          <a href="assets/ZhenyuanPan_Resume.pdf" target="_blank" rel="noopener"><span>Resume PDF</span><b>Open file</b></a>
-        </div>
-        <div class="contact-actions">
-          <a id="s5-download-resume" href="assets/ZhenyuanPan_Resume.pdf" download>Download Resume</a>
-          <button type="button" id="s5-print-resume">Print Resume</button>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- Full-page frosted internship modal -->
-  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true">
-      <button class="modal-close" id="modal-close" type="button"><span class="x">✕</span> Close</button>
-      <div class="modal-scroll" id="modal-scroll"></div>
-    </div>
+  <!-- case-study detail overlay: a frosted layer that FLIP-expands from the
+       lead internship's K-line card into a scrollable editorial article -->
+  <div class="case-overlay" id="case-overlay" aria-hidden="true">
+    <div class="case-backdrop"></div>
+    <div class="case-layer" id="case-layer"></div>
   </div>
-  <!-- candlestick engine -->
-  <script src="hero-chart.js"></script>
-  <!-- screen 2 content + behaviour -->
-  <script src="data.js"></script>
-  <script src="terminal.js"></script>
-  <!-- screen 3 content + behaviour -->
-  <script src="research-data.js"></script>
-  <script src="research.js"></script>
-  <!-- screen 4 workspace illustration (2.5D, HTML/CSS/SVG) -->
-  <script src="iso-room.js"></script>
-  <script src="room.js"></script>
-  <script src="resume.js"></script>
-  <!-- candle → coefficient metamorphosis layer -->
-  <script src="morph-overlay.js"></script>
-  <!-- one-shot scroll morph (screen 1 → 2 → 3) -->
-  <script src="transition.js"></script>
 
-  <!-- live clock + ticker readouts -->
+  <!-- candlestick engine (unchanged, single instance) -->
+  <script src="hero-chart.js"></script>
+  <!-- internship content -->
+  <script src="data.js"></script>
+  <!-- editorial Screen-2 builder (lead block into the stage, rest below) -->
+  <script src="experience.js"></script>
+  <!-- block 02 due-diligence network visualization -->
+  <script src="dd-graph.js"></script>
+  <!-- block 03 quantitative equity research workflow visualization -->
+  <script src="equity-flow.js"></script>
+  <!-- block 04 fundamental coverage workbook visualization -->
+  <script src="workbook.js"></script>
+  <!-- pinned shared-element morph: hero K-line → Screen-2 visual module -->
+  <script src="transition.js"></script>
+  <!-- case-study expand-from-card detail experience -->
+  <script src="research-redsea.js"></script>
+  <!-- AI / DSGE-DMP research detail (KaTeX-typeset equations + interactions) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script src="research-ailabor.js"></script>
+  <!-- behavioral / field economics research detail (Social Capital in Tutoring Networks) -->
+  <script src="research-socialcapital.js"></script>
+  <!-- course-paper tiles: summaries data (generated from summary.md) + detail layer -->
+  <script src="paper-data.js"></script>
+  <script src="research-papers.js"></script>
+  <!-- AI Systems detail: A Front-Row Seat to the AI Cycle (field note 01) -->
+  <script src="research-aicycle.js"></script>
+  <!-- AI Systems detail: The Research Paper Factory Harness (harness 01) -->
+  <script src="research-paperfactory.js"></script>
+  <!-- AI Systems detail: The Internet Product Factory Harness (harness 02) -->
+  <script src="research-productfactory.js"></script>
+  <!-- AI Systems detail: The Quant Factor-Mining Harness (harness 03) -->
+  <script src="research-quantfactor.js"></script>
+  <!-- AI Systems project: AI Decision Engine (GitHub project case study) -->
+  <script src="research-decisionengine.js"></script>
+  <!-- AI Systems project: Relationship Candlestick Lab (GitHub project case study) -->
+  <script src="research-rclab.js"></script>
+  <!-- Markets & Quant: Investment Views (Betting One Layer Down) -->
+  <script src="research-investmentviews.js"></script>
+  <!-- Markets & Quant: Competitions (trading + case competitions) -->
+  <script src="research-competitions.js"></script>
+  <!-- restrained interactive layers for the Red Sea research case study -->
+  <script src="redsea-viz.js"></script>
+  <script src="case-study.js"></script>
+
+  <!-- live clock + ticker readouts (hero chrome) -->
   <script>
     (function () {
       const pad = (n) => String(n).padStart(2, "0");
       const utc = document.getElementById("clock-utc");
       const loc = document.getElementById("clock-local");
-      const s2c = document.getElementById("s2-clock");
-      const s3c = document.getElementById("s3-clock");
       function tick() {
         const d = new Date();
-        const u = "UTC " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
-        if (utc) utc.textContent = u;
-        if (s2c) s2c.textContent = u;
-        if (s3c) s3c.textContent = u;
+        if (utc) utc.textContent = "UTC " + pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
         if (loc) loc.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
       }
       tick(); setInterval(tick, 1000);
 
       const tp = document.getElementById("tick-price");
       const td = document.getElementById("tick-delta");
-      const ft = document.getElementById("foot-tick");
       setInterval(function () {
         const k = window.__heroLastPrice && window.__heroLastPrice();
         if (!k) return;
@@ -598,11 +636,95 @@
           td.className = "tick-delta " + (up ? "up" : "down");
           td.textContent = (up ? "▲ " : "▼ ") + Math.abs(delta).toFixed(2);
         }
-        if (ft) ft.innerHTML = "ZPX:IDX " + k.c.toFixed(2) +
-          ' <span class="' + (up ? "up" : "down") + '">' + (up ? "▲" : "▼") + " " + Math.abs(delta).toFixed(2) + "</span>";
       }, 550);
     })();
   </script>
+  <script>
+    /* Screen-3 cards: reveal on scroll into view (graceful fallback to visible) */
+    (function () {
+      var rx = document.getElementById("research");
+      if (!rx) return;
+      function show() { rx.classList.add("in"); }
+      if (!("IntersectionObserver" in window)) { show(); return; }
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { show(); io.disconnect(); } });
+      }, { threshold: 0.18 });
+      io.observe(rx);
+      setTimeout(function () { if (!rx.classList.contains("in")) show(); }, 2500);
+    })();
+  </script>
+  <script>
+    /* Screen-4 Systems rows: reveal on scroll into view */
+    (function () {
+      var sys = document.getElementById("systems");
+      if (!sys) return;
+      function show() { sys.classList.add("in"); }
+      if (!("IntersectionObserver" in window)) { show(); return; }
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { show(); io.disconnect(); } });
+      }, { threshold: 0.12 });
+      io.observe(sys);
+      setTimeout(function () { if (!sys.classList.contains("in")) show(); }, 2500);
+    })();
+  </script>
+  <script>
+    /* Damped "give" at the Internship -> Research Experience boundary.
+       As the top of #research crosses the middle of the viewport, the research
+       content trails the scroll slightly (a viscous resistance) and springs back
+       to its true position when scrolling stops. Net rest offset is always 0, so
+       there is no layout shift. Localized to the boundary and disabled under
+       prefers-reduced-motion. Native scrolling is never hijacked. */
+    (function () {
+      var research = document.getElementById("research");
+      if (!research) return;
+      var inner = research.querySelector(".exp-wrap");
+      if (!inner) return;
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var MAX = 16, GAIN = 0.95, STIFF = 0.14, VSMOOTH = 0.8;
+      var lastY = window.pageYOffset, vel = 0, offset = 0, running = false;
+      function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+      function weight() {
+        var r = research.getBoundingClientRect();
+        var h = window.innerHeight || 1;
+        var d = Math.abs(r.top - h * 0.5) / (h * 0.6); /* 1 at viewport center, 0 by +-0.6h */
+        return d >= 1 ? 0 : (1 - d);
+      }
+      function frame() {
+        var y = window.pageYOffset;
+        var dv = y - lastY; lastY = y;
+        vel = vel * VSMOOTH + dv * (1 - VSMOOTH);
+        var w = weight();
+        var target = clamp(vel * GAIN, -MAX, MAX) * w;
+        offset += (target - offset) * STIFF;
+        if (Math.abs(offset) < 0.06 && Math.abs(dv) < 0.4 && Math.abs(vel) < 0.4) {
+          offset = 0; vel = 0; inner.style.transform = ""; inner.style.willChange = ""; running = false; return;
+        }
+        inner.style.transform = "translate3d(0," + offset.toFixed(2) + "px,0)";
+        requestAnimationFrame(frame);
+      }
+      function kick() {
+        if (running) return;
+        running = true; lastY = window.pageYOffset; inner.style.willChange = "transform";
+        requestAnimationFrame(frame);
+      }
+      window.addEventListener("scroll", kick, { passive: true });
+    })();
+  </script>
+  <script>
+    /* Screen-5 Markets section: reveal on scroll into view */
+    (function () {
+      var mk = document.getElementById("markets");
+      if (!mk) return;
+      function show() { mk.classList.add("in"); }
+      if (!("IntersectionObserver" in window)) { show(); return; }
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { show(); io.disconnect(); } });
+      }, { threshold: 0.12 });
+      io.observe(mk);
+      setTimeout(function () { if (!mk.classList.contains("in")) show(); }, 2500);
+    })();
+  </script>
+  <!-- sticky top navigation: smooth-scroll + scroll-spy -->
+  <script src="topnav.js"></script>
 </body>
 </html>
-

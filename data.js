@@ -1,211 +1,258 @@
-/* data.js — content for Screen 2. All performance figures are illustrative /
-   simulated and intended to be edited. Exposed as window.SITE_DATA. */
+/* data.js - content for Screen 2 (Professional Experience · Experience Console).
+   Internship experience is the primary narrative; the Yinhua quant strategy is
+   ONE representative work sample, not the identity of the screen.
+
+   Dates / locations are the candidate's real chronology. Strategy KPIs are
+   VERIFIED resume-level values for the flagship composite only; the other two
+   research threads carry no fabricated metrics. The candlestick is a
+   representative visualization, labelled as such. Exposed as window.SITE_DATA. */
 window.SITE_DATA = {
+  /* ── Yinhua representative-work strategy threads (chart tabs) ─────────────── */
   strategies: [
     {
       id: "dpro",
       name: "DPRO + SUE + Dividend Yield",
+      short: "DPRO · SUE · DY",
       tag: "Multi-factor · A-share",
-      factors: ["DPRO", "SUE", "Div. Yield", "Quality"],
-      thesis:
-        "Combine analyst-revision momentum (DPRO) with standardized earnings surprise (SUE) and a dividend-yield value tilt to select quality A-share names with improving fundamentals.",
-      buy: "Top-quintile composite z-score, positive SUE, yield above sector median.",
-      sell: "Composite drops below median, or SUE turns negative for two reports.",
-      perf: { cagr: "+14.6%", sharpe: "1.32", win: "57%", mdd: "−11.8%" },
+      factors: ["DPRO", "SUE", "Div. Yield"],
       maLabels: ["MA20", "MA60"],
       seed: 11,
+      desc:
+        "Combines analyst-revision momentum (DPRO), standardized unexpected earnings (SUE), and a dividend-yield tilt to identify A-share companies with improving fundamentals and attractive valuations.",
+      verified: true,
+      metricsNote: "Long-only · CSI 300 benchmark · backtest 2005-2026.",
+      metrics: [
+        { v: "20.4%", l: "Annualized return", sub: "CSI 300 · 7.7%", pos: true },
+        { v: "4,531%", l: "Cumulative return", sub: "CSI 300 · 371%", pos: true },
+        { v: "0.131", l: "Jensen’s α" },
+        { v: "1.00", l: "Information ratio" },
+      ],
     },
     {
       id: "etf",
       name: "Industry ETF Rotation",
+      short: "ETF Rotation",
       tag: "Cross-sector · Monthly",
       factors: ["12-1 Mom.", "Vol. Adj.", "Breadth"],
-      thesis:
-        "Rotate monthly across industry ETFs by risk-adjusted trailing momentum, overweighting sectors with broadening participation and trimming crowded leaders.",
-      buy: "Hold top 3 sectors by 12-1 momentum, scaled inverse to realized vol.",
-      sell: "Exit on rank fall below 5 or a trend break beneath MA60.",
-      perf: { cagr: "+11.2%", sharpe: "1.08", win: "61%", mdd: "−9.4%" },
       maLabels: ["MA20", "MA60"],
       seed: 23,
+      desc:
+        "Rotates monthly across industry ETFs by risk-adjusted trailing momentum, overweighting sectors with broadening participation and trimming crowded leaders.",
+      verified: false,
+      metricsNote:
+        "Research prototype from the same internship; verified benchmarked metrics are reported for the flagship composite.",
+      metrics: null,
     },
     {
       id: "event",
       name: "Event-Driven A-Share Signal",
+      short: "Event-Driven",
       tag: "Event study · Daily",
       factors: ["CAR", "Liquidity", "News Flow"],
-      thesis:
-        "Trade short-horizon drift around scheduled corporate events — guidance, buybacks, index inclusions — filtering by liquidity and abnormal-return persistence.",
-      buy: "Significant positive CAR in the [-1,+1] window with rising turnover.",
-      sell: "Drift decays to noise by t+7, or liquidity contracts sharply.",
-      perf: { cagr: "+9.8%", sharpe: "0.97", win: "54%", mdd: "−8.1%" },
       maLabels: ["MA10", "MA30"],
       seed: 37,
-    },
-    {
-      id: "surprise",
-      name: "Earnings Surprise Momentum",
-      tag: "PEAD · Quarterly",
-      factors: ["SUE", "Estimate Rev.", "Drift"],
-      thesis:
-        "Capture post-earnings-announcement drift: go long the highest standardized-unexpected-earnings decile and ride the estimate-revision tailwind into the next quarter.",
-      buy: "Top SUE decile with upward analyst revisions post-print.",
-      sell: "Unwind into the following announcement or on revision rollover.",
-      perf: { cagr: "+13.1%", sharpe: "1.19", win: "58%", mdd: "−10.6%" },
-      maLabels: ["MA20", "MA60"],
-      seed: 53,
+      desc:
+        "Trades short-horizon drift around scheduled corporate events (guidance, buybacks, index inclusions), filtering by liquidity and abnormal-return persistence.",
+      verified: false,
+      metricsNote: "Exploratory event-study signal, not separately benchmarked.",
+      metrics: null,
     },
   ],
 
+  /* ── Five internships, in display order. Yinhua is selected by default. ───── */
   internships: [
     {
       id: "yinhua",
-      company: "Yinhua Fund Management",
-      role: "Quantitative Analyst Intern",
-      period: "2024",
-      location: "Shenzhen, CN",
-      team: "Quant Equity / Index & Factor",
-      sector: "Asset Management",
-      quant: true,
+      idx: "01",
+      start: "2024-06",
+      company: "Yinhua Fund Management Co., Ltd.",
+      companyShort: "Yinhua Fund",
+      role: "Quantitative Research Intern",
+      period: "Jun 2024 - Sept 2024",
+      periodShort: "2024",
+      location: "Beijing, China",
+      team: "Quantitative Investment Department",
+      tag: "Quantitative Equity Research",
       firm:
-        "Yinhua Fund Management is a large Chinese asset manager with established index, quantitative and active equity franchises serving institutional and retail investors.",
+        "Yinhua Fund Management is a large Chinese asset manager with established index, quantitative and active-equity franchises serving institutional and retail investors.",
       roleSummary:
-        "Embedded with the quantitative equity team supporting factor research, signal construction and backtesting of systematic A-share strategies.",
-      did: [
-        "Built and cleaned factor datasets (valuation, quality, momentum, earnings-revision) for the A-share universe.",
-        "Researched a composite DPRO + SUE + dividend-yield signal and evaluated it against sector-neutral benchmarks.",
-        "Ran event-study and PEAD diagnostics to test earnings-surprise persistence and decay horizons.",
-        "Maintained a vectorised backtesting workflow and produced factor-performance attribution notes for the team.",
+        "Built and tested systematic A-share strategies using factor signals, stock-ranking models, and portfolio backtests.",
+      overview: [
+        "Independently replicated and backtested 20+ systematic A-share strategies to assess their investment logic, historical performance, and practical viability.",
+        "Developed original stock-selection and industry-ETF rotation models, with robustness tested under changing market conditions and realistic trading assumptions.",
+        "Published selected strategies to the JoinQuant public community.",
+        "Worked end-to-end with market data, signal construction, validation, and portfolio implementation.",
       ],
-      tools: ["Python", "pandas / NumPy", "JoinQuant", "iFinD", "Wind", "SQL", "Excel / VBA"],
+      keyGroups: [
+        { label: "Outputs", items: ["Replication Reports", "Stock Selection", "ETF Rotation"] },
+        { label: "Methods", items: ["Signal Engineering", "Event-Driven Design", "Barra Exposure Control"] },
+      ],
       outputs: [
-        "Reusable factor library + data-cleaning pipeline",
-        "Backtest report on the DPRO+SUE+yield composite",
-        "Earnings-surprise drift study deck",
+        "Multi-factor long-only A-share strategy: DPRO + SUE + Dividend Yield",
+        "CSI 300 benchmark · backtest period 2005-2026",
+        "Factor, event-driven, and industry-ETF-rotation research threads",
       ],
-      representative:
-        "Composite multi-factor A-share signal with full factor attribution and a simulated long-only backtest.",
-      perf: [
-        { v: "20+", l: "Factors tested" },
-        { v: "1.3", l: "Best Sharpe (sim.)" },
-        { v: "8 yrs", l: "Backtest window" },
-      ],
+      tools: ["Python", "JoinQuant", "iFinD", "Wind", "Suntime"],
+      evidence: { type: "chart" },
     },
     {
       id: "sinosafe",
-      company: "Sinosafe General Insurance",
-      role: "Equity Market Analyst Intern",
-      period: "2023",
-      location: "Shenzhen, CN",
+      idx: "02",
+      start: "2023-07",
+      company: "Sinosafe General Insurance Co., Ltd.",
+      companyShort: "Sinosafe",
+      role: "Equity Research Intern",
+      period: "Jul 2023 - Sept 2023",
+      periodShort: "2023",
+      location: "Shenzhen, China",
       team: "Investment / Equity Research",
-      sector: "Insurance · Buy-side",
-      quant: true,
+      tag: "Fundamental Equity Research",
       firm:
-        "Sinosafe General Insurance manages an investment portfolio alongside its underwriting business, with an internal equity research function supporting allocation decisions.",
+        "Sinosafe General Insurance manages an investment portfolio alongside its underwriting business, with an internal equity-research function supporting allocation decisions.",
       roleSummary:
-        "Supported the equity desk with company and sector analysis, market monitoring, and an industry ETF-rotation study used as an allocation input.",
-      did: [
-        "Tracked sector performance and built a monthly industry ETF-rotation model on risk-adjusted momentum.",
-        "Wrote concise equity and sector notes summarising fundamentals, catalysts and valuation.",
-        "Monitored macro releases and market breadth, flagging rotation signals to the desk.",
-        "Assembled monitoring dashboards consolidating prices, factor ranks and news flow.",
+        "Analyzed Hong Kong-listed companies across consumer, property, financials, and internet sectors, forming and updating investment views through earnings, operating trends, valuation, and industry developments.",
+      overview: [
+        "Assessed earnings quality and operating momentum by linking financial-statement movements to company-specific drivers, industry conditions, and management disclosures.",
+        "Updated investment views as results and policy developments emerged, separating temporary earnings noise from changes that could alter valuation, catalysts, or downside risk.",
       ],
-      tools: ["Wind", "iFinD", "Bloomberg", "Excel / VBA", "Python", "PowerPoint"],
+      keyGroups: [
+        { label: "Outputs", items: ["Company Review Notes", "Thesis Update Memos", "Sector Comparison Reviews"] },
+        { label: "Methods", items: ["Earnings Quality Analysis", "Fundamental Driver Analysis", "Valuation & Thesis Review"] },
+      ],
       outputs: [
-        "Industry ETF-rotation model + monthly signal",
-        "Sector and single-name research notes",
-        "Market-monitoring dashboard",
+        "Sector and single-name equity research notes",
+        "Post-investment & risk-monitoring report series",
+        "Company-monitoring coverage workflow",
       ],
-      representative:
-        "Monthly industry ETF-rotation framework feeding tactical sector weights.",
-      perf: [
-        { v: "11", l: "Sectors tracked" },
-        { v: "Monthly", l: "Rebalance" },
-        { v: "1.1", l: "Sharpe (sim.)" },
-      ],
+      tools: ["Wind", "iFinD", "Bloomberg", "Excel / VBA", "PowerPoint"],
+      evidence: {
+        type: "module",
+        kicker: "Representative Work",
+        title: "HK Equity Coverage & Risk Monitoring",
+        intro:
+          "Fundamental coverage and post-investment risk monitoring across 80+ Hong Kong-listed names.",
+        stats: [
+          { v: "80+", l: "HK-listed companies reviewed" },
+          { v: "30+", l: "Post-investment / risk reports" },
+          { v: "8", l: "Sectors under coverage" },
+        ],
+        blocks: [
+          { label: "Sector coverage", kind: "chips",
+            items: ["Financials", "Property", "Industrials", "Tech", "Healthcare", "Consumer", "Energy", "Materials"] },
+          { label: "Risk flags monitored", kind: "list",
+            items: ["Disclosure-quality & filing flags", "Sentiment / news-flow shifts", "Post-investment covenant & valuation risk"] },
+          { label: "Company-monitoring workflow", kind: "flow",
+            items: ["Screen & assign coverage", "Fundamental + disclosure read", "Risk & sentiment scan", "Post-investment report"] },
+        ],
+      },
     },
     {
       id: "sifra",
-      company: "Shenzhen Int'l Financial Research Association",
-      role: "Research Intern",
-      period: "2023",
-      location: "Shenzhen, CN",
-      team: "Markets & Policy Research",
-      sector: "Research Institute",
-      quant: false,
+      idx: "03",
+      start: "2025-06",
+      company: "Shenzhen International Financial Research Association",
+      companyShort: "SZ Int’l Financial Research Assoc.",
+      role: "Macro Research",
+      period: "Jun 2025 - Sept 2025",
+      periodShort: "2025",
+      location: "Shenzhen, China",
+      team: "Macro & Policy Research",
+      tag: "Macro Nowcasting",
       firm:
         "A Shenzhen-based financial research association producing market, industry and policy research for members across the financial sector.",
       roleSummary:
-        "Contributed to applied research on markets and economic policy, supporting reports with data work, literature review and drafting.",
-      did: [
-        "Compiled and cleaned macro and market datasets for thematic research reports.",
-        "Surveyed academic and industry literature on market microstructure and factor investing.",
-        "Drafted sections of research notes and prepared charts and exhibits.",
-        "Synthesised findings into clear summaries for internal and member distribution.",
+        "Built prototype China GDP and CPI nowcasts using high-frequency macroeconomic indicators.",
+      leadPoints: [
+        "Constructed and standardized a real-time indicator panel for Chinese activity and price tracking.",
+        "Adapted a Cleveland Fed-style nowcasting workflow and tested multiple estimation approaches.",
       ],
-      tools: ["Python", "Stata / EViews", "Wind", "Excel", "LaTeX", "PowerPoint"],
+      keyGroups: [
+        { label: "Outputs", items: ["China CPI Nowcast", "Real-Time Macro Signal Tracker", "Port Throughput"] },
+        { label: "Methods", items: ["Tree-Based Ensembles", "Gradient Boosted Trees", "Meta-Model Stacking"] },
+      ],
+      overview: [
+        "Built a GDP / CPI nowcasting workflow from high-frequency macro indicators.",
+        "Replicated Cleveland Fed-style nowcasting methodology on domestic data.",
+        "Maintained an indicator-release calendar and tracked nowcast revisions over time.",
+        "Drafted research sections, charts and exhibits for member distribution.",
+      ],
       outputs: [
-        "Data appendices for published research",
-        "Literature reviews on factor & microstructure topics",
-        "Charts and exhibits for member reports",
+        "GDP / CPI nowcasting dashboard",
+        "Methodology note replicating Cleveland Fed nowcasting",
+        "Indicator-release calendar + revision tracker",
       ],
-      representative:
-        "Applied markets-and-policy research synthesising data, literature and narrative.",
+      tools: ["Python", "Stata / EViews", "Wind", "Excel", "LaTeX"],
+      evidence: {
+        type: "module",
+        kicker: "Representative Work",
+        title: "Macro Nowcasting Dashboard",
+        intro:
+          "High-frequency GDP / CPI nowcasting, replicating Cleveland Fed methodology on Chinese data.",
+        stats: [
+          { v: "GDP·CPI", l: "Nowcast targets" },
+          { v: "Weekly", l: "Update cadence" },
+          { v: "Cleveland Fed", l: "Methodology basis" },
+        ],
+        blocks: [
+          { label: "High-frequency inputs", kind: "chips",
+            items: ["Industrial activity", "Credit & money", "Trade", "Prices / commodities", "Mobility", "Surveys"] },
+          { label: "Pipeline", kind: "flow",
+            items: ["Ingest HF indicators", "Align & seasonally adjust", "Nowcast GDP / CPI", "Track revisions vs release"] },
+          { label: "Deliverables", kind: "list",
+            items: ["Indicator-release calendar", "Nowcast-revision time series", "Methodology replication note"] },
+        ],
+      },
     },
     {
       id: "gaoke",
+      idx: "02",
+      start: "2025-01",
       company: "Zhuhai Gaoke Venture Capital",
-      role: "Risk Control & Compliance Intern",
-      period: "2022",
-      location: "Zhuhai, CN",
+      companyShort: "Zhuhai Gaoke Venture Capital",
+      role: "Investment & Risk Control",
+      period: "Jan 2025",
+      periodShort: "2025",
+      location: "Zhuhai, China",
       team: "Risk & Compliance",
-      sector: "Venture Capital",
-      quant: false,
+      tag: "Risk × Engineering",
       firm:
         "Zhuhai Gaoke Venture Capital invests in early- and growth-stage companies, with a risk and compliance function overseeing portfolio and regulatory exposures.",
       roleSummary:
-        "Assisted the risk and compliance team with due-diligence support, documentation review and portfolio risk monitoring.",
-      did: [
-        "Supported due-diligence on prospective investments, organising financial and legal materials.",
-        "Reviewed compliance documentation against internal and regulatory checklists.",
-        "Helped maintain a portfolio risk register and tracked key exposures.",
-        "Summarised findings into memos for investment and risk committees.",
+        "Embedded across the investment and risk-control functions: running venture due diligence and deal screening, and rebuilding the firm's manual risk checks into a structured AI workflow.",
+      overview: [
+        "Evaluated prospective deals on financials, cap-table structure and legal exposure to judge investment quality.",
+        "Turned manual Tianyancha corporate, litigation and cap-table checks into a structured, repeatable AI workflow.",
       ],
-      tools: ["Excel", "Wind", "PowerPoint", "Internal risk systems"],
+      keyGroups: [
+        { label: "Outputs", items: ["Due-Diligence Packs", "AI Risk-Check Workflow", "Equity-Repurchase Ops Guide"] },
+        { label: "Methods", items: ["Cap-Table & Financial Analysis", "Litigation & Regulatory Screening"] },
+      ],
       outputs: [
         "Due-diligence support packs",
         "Compliance review checklists",
-        "Portfolio risk-monitoring notes",
+        "Equity-repurchase operations guide",
       ],
-      representative:
-        "Risk and compliance support across the venture investment lifecycle.",
-    },
-    {
-      id: "zhongan",
-      company: "Guangdong ZhongAn Law Firm",
-      role: "Legal Intern",
-      period: "2022",
-      location: "Guangdong, CN",
-      team: "Corporate & Financial Law",
-      sector: "Legal Services",
-      quant: false,
-      firm:
-        "Guangdong ZhongAn Law Firm advises corporate and financial clients on transactions, compliance and dispute matters.",
-      roleSummary:
-        "Supported attorneys on corporate and financial-law matters through research, document drafting and case preparation.",
-      did: [
-        "Researched statutes, regulations and precedent relevant to corporate and financial matters.",
-        "Drafted and proof-read contracts, memos and supporting legal documents.",
-        "Organised case files and prepared materials for filings and meetings.",
-        "Summarised regulatory requirements into client-ready briefs.",
-      ],
-      tools: ["Legal databases", "Word", "Excel", "PowerPoint"],
-      outputs: [
-        "Legal research memos",
-        "Drafted contracts & documents",
-        "Organised case files",
-      ],
-      representative:
-        "Corporate and financial-law support bridging legal and market context.",
+      tools: ["Tianyancha", "Excel", "Wind", "PowerPoint"],
+      evidence: {
+        type: "module",
+        kicker: "Representative Work",
+        title: "Due-Diligence & Compliance Workflow",
+        intro:
+          "Diligence support, data ingestion and risk/compliance review across the venture investment lifecycle.",
+        stats: [
+          { v: "Tianyancha", l: "Primary data source" },
+          { v: "DD + RC", l: "Workflow scope" },
+          { v: "Checklist", l: "Compliance control" },
+        ],
+        blocks: [
+          { label: "Diligence workflow", kind: "flow",
+            items: ["Source & screen target", "Tianyancha data ingestion", "Financial + legal review", "Risk / compliance memo"] },
+          { label: "Risk & compliance checklist", kind: "list",
+            items: ["Corporate & cap-table structure", "Litigation & regulatory exposure", "Equity-repurchase / buyback terms"] },
+          { label: "Deliverables", kind: "chips",
+            items: ["DD pack", "Relationship map", "Repurchase ops guide", "Risk register"] },
+        ],
+      },
     },
   ],
 };
